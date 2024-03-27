@@ -137,12 +137,13 @@ from civitai.models.worker_asset_availability import WorkerAssetAvailability
 
 
 class Civitai:
-    def __init__(self):
-        self.api_token = os.getenv('CIVITAI_API_TOKEN', '')
+    def __init__(self, api_token=None):
+        self.api_token = api_token or os.getenv('CIVITAI_API_TOKEN', '')
         config = Configuration(host="https://orchestration.civitai.com")
         api_client = ApiClient(configuration=config)
         api_client.default_headers['Authorization'] = f"Bearer {self.api_token}"
         self.jobs_api = JobsApi(api_client=api_client)
+        self.coverage_api = CoverageApi(api_client=api_client)
 
     @property
     def jobs(self):
@@ -152,9 +153,82 @@ class Civitai:
         def __init__(self, civitai):
             self.civitai = civitai
 
-        def get(self, token):
-            return self.civitai.jobs_api.v1_consumer_jobs_get(token=token)
+        def get(self, token=None, id=None):
+            response = None
+            if token:
+                full_response = self.civitai.jobs_api.v1_consumer_jobs_get(
+                    token=token)
+                response = self._filter_response(full_response)
+            elif id:
+                full_response = self.civitai.jobs_api.v1_consumer_jobs_job_id_get(
+                    job_id=id)
+                response = self._filter_response(full_response)
+            else:
+                raise ValueError("Either 'token' or 'id' must be provided.")
+            return response
+
+        @staticmethod
+        def _filter_response(full_response):
+            filtered_jobs = []
+
+            for job in full_response.jobs:
+                filtered_job = {
+                    "jobId": job.job_id,
+                    "cost": job.cost,
+                    "result": job.result,
+                    "scheduled": job.scheduled,
+                }
+                filtered_jobs.append(filtered_job)
+
+            filtered_response = {
+                "token": full_response.token,
+                "jobs": filtered_jobs,
+            }
+
+            return filtered_response
+
+        def get_by_query(self, query, detailed=False):
+            return self.civitai.jobs_api.v1_consumer_jobs_query_post(query=query, detailed=detailed)
+
+        def cancel(self, job_id):
+            return self.civitai.jobs_api.v1_consumer_jobs_cancel(job_id=job_id, force=True)
+
+    # @property
+    # def models(self):
+    #     return self.Models(self)
+
+    # class Models:
+    #     def __init__(self, civitai):
+    #         self.civitai = civitai
+
+    #     def get(self, model):
+    #         return self.civitai.coverage_api.v1_consumer_coverage_get(model=model)
+
+    # @property
+    # def image(self):
+    #     return self.Image(self)
+
+    # class Image:
+    #     def __init__(self, civitai):
+    #         self.civitai = civitai
+
+    #     def from_text(self, input, wait=False):
+    #         # Implement the image.fromText method
+    #         pass
+
+    #     def from_comfy(self, input, wait=False):
+    #         # Implement the image.fromComfy method
+    #         pass
+
+    # def poll_for_job_completion(self, token, interval=30, timeout=600):
+    #     # Implement the pollForJobCompletion method
+    #     pass
 
 
+# Create an instance of Civitai and assign it to the variable 'civitai'
 civitai = Civitai()
+
+# Expose the 'jobs', 'models', and 'image' attributes of the 'civitai' instance at the module level
 jobs = civitai.jobs
+# models = civitai.models
+# image = civitai.image

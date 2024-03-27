@@ -330,8 +330,6 @@ class ApiClient:
                     return_data = self.__deserialize_primitive(response_text, response_type)
                 else:
                     return_data = self.deserialize(response_text, response_type)
-            print("response_text:", response_text)
-            print("return_data:", return_data)
 
         finally:
             if not 200 <= response_data.status <= 299:
