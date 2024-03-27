@@ -20,6 +20,7 @@ import mimetypes
 import os
 import re
 import tempfile
+import logging
 
 from urllib.parse import quote
 from typing import Tuple, Optional, List, Dict, Union
@@ -41,6 +42,7 @@ from civitai.exceptions import (
 
 RequestSerialized = Tuple[str, str, Dict[str, str], Optional[str], List[str]]
 
+
 class ApiClient:
     """Generic API client for OpenAPI client library builds.
 
@@ -60,7 +62,7 @@ class ApiClient:
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         'int': int,
-        'long': int, # TODO remove as only py3 is supported?
+        'long': int,  # TODO remove as only py3 is supported?
         'float': float,
         'str': str,
         'bool': bool,
@@ -91,6 +93,9 @@ class ApiClient:
         self.user_agent = 'OpenAPI-Generator/1.0.0/python'
         self.client_side_validation = configuration.client_side_validation
 
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+
     def __enter__(self):
         return self
 
@@ -108,7 +113,6 @@ class ApiClient:
 
     def set_default_header(self, header_name, header_value):
         self.default_headers[header_name] = header_value
-
 
     _default = None
 
@@ -150,7 +154,6 @@ class ApiClient:
         _host=None,
         _request_auth=None
     ) -> RequestSerialized:
-
         """Builds the HTTP request params needed by the request.
         :param method: Method to call.
         :param resource_path: Path to method endpoint.
@@ -183,7 +186,7 @@ class ApiClient:
         if header_params:
             header_params = self.sanitize_for_serialization(header_params)
             header_params = dict(
-                self.parameters_to_tuples(header_params,collection_formats)
+                self.parameters_to_tuples(header_params, collection_formats)
             )
 
         # path parameters
@@ -244,7 +247,6 @@ class ApiClient:
 
         return method, url, header_params, body, post_params
 
-
     def call_api(
         self,
         method,
@@ -267,6 +269,11 @@ class ApiClient:
         """
 
         try:
+            self.logger.debug(f"Request Method: {method}")
+            self.logger.debug(f"Request URL: {url}")
+            self.logger.debug(f"Request Headers: {header_params}")
+            self.logger.debug(f"Request Body: {body}")
+
             # perform request and return response
             response_data = self.rest_client.request(
                 method, url,
@@ -274,6 +281,11 @@ class ApiClient:
                 body=body, post_params=post_params,
                 _request_timeout=_request_timeout
             )
+
+            # Add logging statement for the response
+            self.logger.debug(f"Response Status Code: {response_data.status}")
+            self.logger.debug(f"Response Headers: {response_data.getheaders()}")
+            self.logger.debug(f"Response Body: {response_data.data}")
 
         except ApiException as e:
             raise e
@@ -283,7 +295,7 @@ class ApiClient:
     def response_deserialize(
         self,
         response_data: rest.RESTResponse,
-        response_types_map: Optional[Dict[str, ApiResponseT]]=None
+        response_types_map: Optional[Dict[str, ApiResponseT]] = None
     ) -> ApiResponse[ApiResponseT]:
         """Deserializes response into an object.
         :param response_data: RESTResponse object to be deserialized.
@@ -318,8 +330,15 @@ class ApiClient:
                     return_data = self.__deserialize_primitive(response_text, response_type)
                 else:
                     return_data = self.deserialize(response_text, response_type)
+            print("response_text:", response_text)
+            print("return_data:", return_data)
+
         finally:
             if not 200 <= response_data.status <= 299:
+                print("Error response:")
+                print("Status code:", response_data.status)
+                print("Response text:", response_text)
+                print("Return data:", return_data)
                 raise ApiException.from_response(
                     http_resp=response_data,
                     body=response_text,
@@ -327,10 +346,10 @@ class ApiClient:
                 )
 
         return ApiResponse(
-            status_code = response_data.status,
-            data = return_data,
-            headers = response_data.getheaders(),
-            raw_data = response_data.data
+            status_code=response_data.status,
+            data=return_data,
+            headers=response_data.getheaders(),
+            raw_data=response_data.data
         )
 
     def sanitize_for_serialization(self, obj):
@@ -593,6 +612,10 @@ class ApiClient:
         :param request_auth: if set, the provided settings will
                              override the token in the configuration.
         """
+
+        print("Authentication settings:", auth_settings)
+        print("Request auth:", request_auth)
+
         if not auth_settings:
             return
 
@@ -637,6 +660,10 @@ class ApiClient:
         The object type is the return value of sanitize_for_serialization().
         :param auth_setting: auth settings for the endpoint
         """
+
+        print("Applying auth params:")
+        print("Auth setting:", auth_setting)
+
         if auth_setting['in'] == 'cookie':
             headers['Cookie'] = auth_setting['value']
         elif auth_setting['in'] == 'header':

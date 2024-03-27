@@ -18,9 +18,9 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class BaseModel(str, Enum):
+class SDBaseModel(str, Enum):
     """
-    BaseModel
+    SDBaseModel
     """
 
     """
@@ -33,5 +33,3 @@ class BaseModel(str, Enum):
     def from_json(cls, json_str: str) -> Self:
         """Create an instance of BaseModel from a JSON string"""
         return cls(json.loads(json_str))
-
-

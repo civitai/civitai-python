@@ -26,33 +26,44 @@ from civitai.models.time_span import TimeSpan
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class JobEvent(BaseModel):
     """
     JobEvent
-    """ # noqa: E501
+    """  # noqa: E501
     job_id: Optional[StrictStr] = Field(default=None, alias="jobId")
     type: Optional[JobEventType] = None
-    date_time: Optional[datetime] = Field(default=None, description="Get the absolute datetime on which this event got created", alias="dateTime")
+    date_time: Optional[datetime] = Field(
+        default=None, description="Get the absolute datetime on which this event got created", alias="dateTime")
     provider: Optional[Provider] = None
-    worker_id: Optional[StrictStr] = Field(default=None, description="Get or set the workerId that is associated with this event", alias="workerId")
-    context: Optional[Dict[str, Any]] = Field(default=None, description="An optional set of key/value pairs that can be used to provide additional context.")
-    claim_duration: Optional[TimeSpan] = Field(default=None, alias="claimDuration")
-    job_duration: Optional[TimeSpan] = Field(default=None, alias="jobDuration")
-    retry_attempt: Optional[StrictInt] = Field(default=None, description="The retry attempt of this job", alias="retryAttempt")
-    cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The cost of the job associated with this event")
-    job_properties: Optional[Dict[str, Any]] = Field(default=None, description="The properties of the job associated with this event", alias="jobProperties")
-    job_type: Optional[StrictStr] = Field(default=None, description="Get the type of the job", alias="jobType")
-    job_priority: Optional[StrictInt] = Field(default=None, description="The priority that is associated with this job", alias="jobPriority")
-    claim_has_completed: Optional[StrictBool] = Field(default=None, description="Get wether this event marks the completion of a claim", alias="claimHasCompleted")
-    job_has_completed: Optional[StrictBool] = Field(default=None, description="Get wether this event marks the completion of a job  This is determined based on the Civitai.Orchestration.Grains.Jobs.JobEvent.Type of this event", alias="jobHasCompleted")
-    __properties: ClassVar[List[str]] = ["jobId", "type", "dateTime", "provider", "workerId", "context", "claimDuration", "jobDuration", "retryAttempt", "cost", "jobProperties", "jobType", "jobPriority", "claimHasCompleted", "jobHasCompleted"]
+    worker_id: Optional[StrictStr] = Field(
+        default=None, description="Get or set the workerId that is associated with this event", alias="workerId")
+    context: Optional[Dict[str, Any]] = Field(
+        default=None, description="An optional set of key/value pairs that can be used to provide additional context.")
+    claim_duration: Optional[str] = Field(default=None, alias="claimDuration")
+    job_duration: Optional[str] = Field(default=None, alias="jobDuration")
+    retry_attempt: Optional[StrictInt] = Field(
+        default=None, description="The retry attempt of this job", alias="retryAttempt")
+    cost: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The cost of the job associated with this event")
+    job_properties: Optional[Dict[str, Any]] = Field(
+        default=None, description="The properties of the job associated with this event", alias="jobProperties")
+    job_type: Optional[StrictStr] = Field(
+        default=None, description="Get the type of the job", alias="jobType")
+    job_priority: Optional[StrictInt] = Field(
+        default=None, description="The priority that is associated with this job", alias="jobPriority")
+    claim_has_completed: Optional[StrictBool] = Field(
+        default=None, description="Get wether this event marks the completion of a claim", alias="claimHasCompleted")
+    job_has_completed: Optional[StrictBool] = Field(
+        default=None, description="Get wether this event marks the completion of a job  This is determined based on the Civitai.Orchestration.Grains.Jobs.JobEvent.Type of this event", alias="jobHasCompleted")
+    __properties: ClassVar[List[str]] = ["jobId", "type", "dateTime", "provider", "workerId", "context", "claimDuration",
+                                         "jobDuration", "retryAttempt", "cost", "jobProperties", "jobType", "jobPriority", "claimHasCompleted", "jobHasCompleted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -139,8 +150,8 @@ class JobEvent(BaseModel):
             "provider": obj.get("provider"),
             "workerId": obj.get("workerId"),
             "context": obj.get("context"),
-            "claimDuration": TimeSpan.from_dict(obj["claimDuration"]) if obj.get("claimDuration") is not None else None,
-            "jobDuration": TimeSpan.from_dict(obj["jobDuration"]) if obj.get("jobDuration") is not None else None,
+            "claimDuration": obj["claimDuration"] if obj.get("claimDuration") is not None else None,
+            "jobDuration": obj["jobDuration"] if obj.get("jobDuration") is not None else None,
             "retryAttempt": obj.get("retryAttempt"),
             "cost": obj.get("cost"),
             "jobProperties": obj.get("jobProperties"),
@@ -150,5 +161,3 @@ class JobEvent(BaseModel):
             "jobHasCompleted": obj.get("jobHasCompleted")
         })
         return _obj
-
-

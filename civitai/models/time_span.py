@@ -22,10 +22,11 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class TimeSpan(BaseModel):
     """
     TimeSpan
-    """ # noqa: E501
+    """  # noqa: E501
     ticks: Optional[StrictInt] = None
     days: Optional[StrictInt] = None
     hours: Optional[StrictInt] = None
@@ -36,19 +37,24 @@ class TimeSpan(BaseModel):
     seconds: Optional[StrictInt] = None
     total_days: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalDays")
     total_hours: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalHours")
-    total_milliseconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalMilliseconds")
-    total_microseconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalMicroseconds")
-    total_nanoseconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalNanoseconds")
-    total_minutes: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalMinutes")
-    total_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="totalSeconds")
-    __properties: ClassVar[List[str]] = ["ticks", "days", "hours", "milliseconds", "microseconds", "nanoseconds", "minutes", "seconds", "totalDays", "totalHours", "totalMilliseconds", "totalMicroseconds", "totalNanoseconds", "totalMinutes", "totalSeconds"]
+    total_milliseconds: Optional[Union[StrictFloat, StrictInt]
+                                 ] = Field(default=None, alias="totalMilliseconds")
+    total_microseconds: Optional[Union[StrictFloat, StrictInt]
+                                 ] = Field(default=None, alias="totalMicroseconds")
+    total_nanoseconds: Optional[Union[StrictFloat, StrictInt]
+                                ] = Field(default=None, alias="totalNanoseconds")
+    total_minutes: Optional[Union[StrictFloat, StrictInt]
+                            ] = Field(default=None, alias="totalMinutes")
+    total_seconds: Optional[Union[StrictFloat, StrictInt]
+                            ] = Field(default=None, alias="totalSeconds")
+    __properties: ClassVar[List[str]] = ["ticks", "days", "hours", "milliseconds", "microseconds", "nanoseconds", "minutes", "seconds",
+                                         "totalDays", "totalHours", "totalMilliseconds", "totalMicroseconds", "totalNanoseconds", "totalMinutes", "totalSeconds"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -139,5 +145,3 @@ class TimeSpan(BaseModel):
             "totalSeconds": obj.get("totalSeconds")
         })
         return _obj
-
-

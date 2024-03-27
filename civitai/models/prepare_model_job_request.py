@@ -19,7 +19,7 @@ import json
 
 from pydantic import ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from civitai.models.base_model import BaseModel
+from civitai.models.base_model import SDBaseModel
 from civitai.models.job_request import JobRequest
 from civitai.models.job_request_priority import JobRequestPriority
 from civitai.models.prepare_model_action import PrepareModelAction
@@ -28,21 +28,22 @@ from civitai.models.time_span import TimeSpan
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class PrepareModelJobRequest(JobRequest):
     """
     PrepareModelJobRequest
-    """ # noqa: E501
-    base_model: Optional[BaseModel] = Field(default=None, alias="baseModel")
+    """  # noqa: E501
+    base_model: Optional[SDBaseModel] = Field(default=None, alias="baseModel")
     model: Optional[StrictStr] = Field(default=None, description="Get or set the model to prepare")
     action: Optional[PrepareModelAction] = None
-    __properties: ClassVar[List[str]] = ["$type", "name", "priority", "providers", "expireAt", "properties", "callbackUrl", "timeout", "retries", "dependencies"]
+    __properties: ClassVar[List[str]] = ["$type", "name", "priority", "providers",
+                                         "expireAt", "properties", "callbackUrl", "timeout", "retries", "dependencies"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -146,5 +147,3 @@ class PrepareModelJobRequest(JobRequest):
             "dependencies": obj.get("dependencies")
         })
         return _obj
-
-

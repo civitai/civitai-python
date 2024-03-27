@@ -16,6 +16,8 @@
 
 __version__ = "1.0.0"
 
+import os
+
 # import apis into sdk package
 from civitai.api.consumption_api import ConsumptionApi
 from civitai.api.coverage_api import CoverageApi
@@ -36,7 +38,7 @@ from civitai.exceptions import ApiException
 from civitai.models.air import AIR
 from civitai.models.assembly import Assembly
 from civitai.models.asset_type import AssetType
-from civitai.models.base_model import BaseModel
+from civitai.models.base_model import SDBaseModel
 from civitai.models.calling_conventions import CallingConventions
 from civitai.models.clear_asset_request import ClearAssetRequest
 from civitai.models.comfy_job import ComfyJob
@@ -132,3 +134,27 @@ from civitai.models.upload_blob_request import UploadBlobRequest
 from civitai.models.wd_tagging_job import WDTaggingJob
 from civitai.models.wd_tagging_job_request import WDTaggingJobRequest
 from civitai.models.worker_asset_availability import WorkerAssetAvailability
+
+
+class Civitai:
+    def __init__(self):
+        self.api_token = os.getenv('CIVITAI_API_TOKEN', '')
+        config = Configuration(host="https://orchestration.civitai.com")
+        api_client = ApiClient(configuration=config)
+        api_client.default_headers['Authorization'] = f"Bearer {self.api_token}"
+        self.jobs_api = JobsApi(api_client=api_client)
+
+    @property
+    def jobs(self):
+        return self.Jobs(self)
+
+    class Jobs:
+        def __init__(self, civitai):
+            self.civitai = civitai
+
+        def get(self, token):
+            return self.civitai.jobs_api.v1_consumer_jobs_get(token=token)
+
+
+civitai = Civitai()
+jobs = civitai.jobs

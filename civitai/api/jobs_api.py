@@ -12,12 +12,8 @@
 """  # noqa: E501
 
 import warnings
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
+from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool
 from typing import Any, Dict, List, Optional, Tuple, Union
-from typing_extensions import Annotated
-
-from pydantic import Field, StrictBool, StrictStr
-from typing import Optional
 from typing_extensions import Annotated
 from civitai.models.job_status_collection import JobStatusCollection
 from civitai.models.job_template_list import JobTemplateList
@@ -44,12 +40,12 @@ class JobsApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
-
     @validate_call
     def v1_consumer_jobs_delete(
         self,
         token: Annotated[StrictStr, Field(description="The token that was returned when requesting jobs")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -90,7 +86,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_delete_serialize(
             token=token,
@@ -115,12 +111,12 @@ class JobsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def v1_consumer_jobs_delete_with_http_info(
         self,
         token: Annotated[StrictStr, Field(description="The token that was returned when requesting jobs")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -161,7 +157,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_delete_serialize(
             token=token,
@@ -186,12 +182,12 @@ class JobsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def v1_consumer_jobs_delete_without_preload_content(
         self,
         token: Annotated[StrictStr, Field(description="The token that was returned when requesting jobs")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation of jobs, even when jobs are currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -232,7 +228,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_delete_serialize(
             token=token,
@@ -252,7 +248,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_delete_serialize(
         self,
@@ -279,17 +274,16 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if token is not None:
-            
+
             _query_params.append(('token', token))
-            
+
         if force is not None:
-            
+
             _query_params.append(('force', force))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -297,7 +291,6 @@ class JobsApi:
                 'application/json'
             ]
         )
-
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -319,15 +312,14 @@ class JobsApi:
             _request_auth=_request_auth
         )
 
-
-
-
     @validate_call
     def v1_consumer_jobs_get(
         self,
         token: Annotated[StrictStr, Field(description="The token that got returned as a result of submitting a requeset")],
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Whether to include the job definition")] = None,
+        wait: Annotated[Optional[StrictBool], Field(
+            description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Whether to include the job definition")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -370,7 +362,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_get_serialize(
             token=token,
@@ -397,13 +389,14 @@ class JobsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def v1_consumer_jobs_get_with_http_info(
         self,
         token: Annotated[StrictStr, Field(description="The token that got returned as a result of submitting a requeset")],
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Whether to include the job definition")] = None,
+        wait: Annotated[Optional[StrictBool], Field(
+            description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Whether to include the job definition")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -446,7 +439,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_get_serialize(
             token=token,
@@ -473,13 +466,14 @@ class JobsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def v1_consumer_jobs_get_without_preload_content(
         self,
         token: Annotated[StrictStr, Field(description="The token that got returned as a result of submitting a requeset")],
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Whether to include the job definition")] = None,
+        wait: Annotated[Optional[StrictBool], Field(
+            description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Whether to include the job definition")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -522,7 +516,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_get_serialize(
             token=token,
@@ -544,7 +538,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_get_serialize(
         self,
@@ -572,21 +565,20 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if token is not None:
-            
+
             _query_params.append(('token', token))
-            
+
         if wait is not None:
-            
+
             _query_params.append(('wait', wait))
-            
+
         if detailed is not None:
-            
+
             _query_params.append(('detailed', detailed))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -594,7 +586,6 @@ class JobsApi:
                 'application/json'
             ]
         )
-
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -616,14 +607,12 @@ class JobsApi:
             _request_auth=_request_auth
         )
 
-
-
-
     @validate_call
     def v1_consumer_jobs_job_id_delete(
         self,
         job_id: Annotated[StrictStr, Field(description="The id of the job to cancel")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation, even when the job is currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation, even when the job is currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -664,7 +653,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_delete_serialize(
             job_id=job_id,
@@ -689,12 +678,12 @@ class JobsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def v1_consumer_jobs_job_id_delete_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The id of the job to cancel")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation, even when the job is currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation, even when the job is currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -735,7 +724,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_delete_serialize(
             job_id=job_id,
@@ -760,12 +749,12 @@ class JobsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def v1_consumer_jobs_job_id_delete_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The id of the job to cancel")],
-        force: Annotated[Optional[StrictBool], Field(description="Force cancellation, even when the job is currently being worked on")] = None,
+        force: Annotated[Optional[StrictBool], Field(
+            description="Force cancellation, even when the job is currently being worked on")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -806,7 +795,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_delete_serialize(
             job_id=job_id,
@@ -826,7 +815,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_job_id_delete_serialize(
         self,
@@ -855,13 +843,12 @@ class JobsApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         if force is not None:
-            
+
             _query_params.append(('force', force))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -869,7 +856,6 @@ class JobsApi:
                 'application/json'
             ]
         )
-
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -890,9 +876,6 @@ class JobsApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-
-
 
     @validate_call
     def v1_consumer_jobs_job_id_get(
@@ -939,7 +922,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_get_serialize(
             job_id=job_id,
@@ -963,7 +946,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
-
 
     @validate_call
     def v1_consumer_jobs_job_id_get_with_http_info(
@@ -1010,7 +992,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_get_serialize(
             job_id=job_id,
@@ -1034,7 +1016,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
 
     @validate_call
     def v1_consumer_jobs_job_id_get_without_preload_content(
@@ -1081,7 +1062,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_get_serialize(
             job_id=job_id,
@@ -1101,7 +1082,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_job_id_get_serialize(
         self,
@@ -1130,13 +1110,12 @@ class JobsApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         if detailed is not None:
-            
+
             _query_params.append(('detailed', detailed))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -1144,7 +1123,6 @@ class JobsApi:
                 'application/json'
             ]
         )
-
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -1165,9 +1143,6 @@ class JobsApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-
-
 
     @validate_call
     def v1_consumer_jobs_job_id_put(
@@ -1214,7 +1189,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_put_serialize(
             job_id=job_id,
@@ -1238,7 +1213,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
-
 
     @validate_call
     def v1_consumer_jobs_job_id_put_with_http_info(
@@ -1285,7 +1259,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_put_serialize(
             job_id=job_id,
@@ -1309,7 +1283,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
 
     @validate_call
     def v1_consumer_jobs_job_id_put_without_preload_content(
@@ -1356,7 +1329,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_job_id_put_serialize(
             job_id=job_id,
@@ -1376,7 +1349,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_job_id_put_serialize(
         self,
@@ -1410,7 +1382,6 @@ class JobsApi:
         if taint_job_request is not None:
             _body_params = taint_job_request
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
             [
@@ -1425,8 +1396,8 @@ class JobsApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
+                        'application/json',
+                        'text/json',
                         'application/*+json'
                     ]
                 )
@@ -1454,28 +1425,18 @@ class JobsApi:
             _request_auth=_request_auth
         )
 
-
-
-
-    @validate_call
+    # @validate_call
     def v1_consumer_jobs_post(
         self,
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the job specification upon response")] = None,
-        job_template_list: Optional[JobTemplateList] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> JobStatusCollection:
+        wait: Optional[bool] = None,
+        detailed: Optional[bool] = None,
+        job_template_list: Optional[Dict] = None,
+        _request_timeout: Union[None, float, Tuple[float, float]] = None,
+        _request_auth: Optional[Dict[str, Any]] = None,
+        _content_type: Optional[str] = None,
+        _headers: Optional[Dict[str, Any]] = None,
+        _host_index: int = 0,
+    ):
         """Submits a new job for processing
 
         Sample request:                    POST /v1/consumer/jobs      {        \"$type\": \"textToImage\",        \"model\": \"urn:air:sdxl:model:civitai:4201@130072\",        \"params\": {            \"prompt\": \"A cat\",            \"negativePrompt\": \"A dog\",            \"scheduler\": \"EulerA\",            \"steps\": 30,            \"cfgScale\": 10,            \"width\": 1216,            \"height\": 832,            \"seed\": -1,            \"clipSkip\": 1        },        \"additionalNetworks\": {          \"civitai:58390@62833\": {            \"type\": \"Lora\",            \"strength\": 1          }        },        \"quantity\": 1,        \"priority\": {            \"min\": 2,            \"max\": 8        }      }
@@ -1506,8 +1467,9 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
+        print("job_template_list", job_template_list)
         _param = self._v1_consumer_jobs_post_serialize(
             wait=wait,
             detailed=detailed,
@@ -1523,6 +1485,8 @@ class JobsApi:
             '202': None,
             '400': "ProblemDetails",
         }
+        print("API parameters:", _param)
+
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1533,12 +1497,13 @@ class JobsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def v1_consumer_jobs_post_with_http_info(
         self,
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the job specification upon response")] = None,
+        wait: Annotated[Optional[StrictBool], Field(
+            description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Wether to include the job specification upon response")] = None,
         job_template_list: Optional[JobTemplateList] = None,
         _request_timeout: Union[
             None,
@@ -1583,7 +1548,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_post_serialize(
             wait=wait,
@@ -1610,12 +1575,13 @@ class JobsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def v1_consumer_jobs_post_without_preload_content(
         self,
-        wait: Annotated[Optional[StrictBool], Field(description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the job specification upon response")] = None,
+        wait: Annotated[Optional[StrictBool], Field(
+            description="Whether to wait for the job to complete before returning or to return immediatly  The request may return a 202 if the clients waits for the job to complete and the job does not complete within the requested timeout.   In which case the client should use the token to query the status of the job.")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Wether to include the job specification upon response")] = None,
         job_template_list: Optional[JobTemplateList] = None,
         _request_timeout: Union[
             None,
@@ -1660,7 +1626,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_post_serialize(
             wait=wait,
@@ -1682,7 +1648,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_post_serialize(
         self,
@@ -1710,19 +1675,18 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if wait is not None:
-            
+
             _query_params.append(('wait', wait))
-            
+
         if detailed is not None:
-            
+
             _query_params.append(('detailed', detailed))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
         if job_template_list is not None:
             _body_params = job_template_list
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -1738,8 +1702,8 @@ class JobsApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
+                        'application/json',
+                        'text/json',
                         'application/*+json'
                     ]
                 )
@@ -1766,9 +1730,6 @@ class JobsApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-
-
 
     @validate_call
     def v1_consumer_jobs_put(
@@ -1815,7 +1776,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_put_serialize(
             token=token,
@@ -1839,7 +1800,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
-
 
     @validate_call
     def v1_consumer_jobs_put_with_http_info(
@@ -1886,7 +1846,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_put_serialize(
             token=token,
@@ -1910,7 +1870,6 @@ class JobsApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
 
     @validate_call
     def v1_consumer_jobs_put_without_preload_content(
@@ -1957,7 +1916,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_put_serialize(
             token=token,
@@ -1977,7 +1936,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_put_serialize(
         self,
@@ -2004,15 +1962,14 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if token is not None:
-            
+
             _query_params.append(('token', token))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
         if taint_jobs_request is not None:
             _body_params = taint_jobs_request
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -2028,8 +1985,8 @@ class JobsApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
+                        'application/json',
+                        'text/json',
                         'application/*+json'
                     ]
                 )
@@ -2057,13 +2014,11 @@ class JobsApi:
             _request_auth=_request_auth
         )
 
-
-
-
     @validate_call
     def v1_consumer_jobs_query_post(
         self,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the original job definition")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Wether to include the original job definition")] = None,
         query_jobs_request: Optional[QueryJobsRequest] = None,
         _request_timeout: Union[
             None,
@@ -2105,7 +2060,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_query_post_serialize(
             detailed=detailed,
@@ -2129,11 +2084,11 @@ class JobsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def v1_consumer_jobs_query_post_with_http_info(
         self,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the original job definition")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Whether to include the original job definition")] = None,
         query_jobs_request: Optional[QueryJobsRequest] = None,
         _request_timeout: Union[
             None,
@@ -2175,7 +2130,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_query_post_serialize(
             detailed=detailed,
@@ -2199,11 +2154,11 @@ class JobsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def v1_consumer_jobs_query_post_without_preload_content(
         self,
-        detailed: Annotated[Optional[StrictBool], Field(description="Wether to include the original job definition")] = None,
+        detailed: Annotated[Optional[StrictBool], Field(
+            description="Wether to include the original job definition")] = None,
         query_jobs_request: Optional[QueryJobsRequest] = None,
         _request_timeout: Union[
             None,
@@ -2245,7 +2200,7 @@ class JobsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._v1_consumer_jobs_query_post_serialize(
             detailed=detailed,
@@ -2264,7 +2219,6 @@ class JobsApi:
             _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _v1_consumer_jobs_query_post_serialize(
         self,
@@ -2291,15 +2245,14 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if detailed is not None:
-            
+
             _query_params.append(('detailed', detailed))
-            
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
         if query_jobs_request is not None:
             _body_params = query_jobs_request
-
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -2315,8 +2268,8 @@ class JobsApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
+                        'application/json',
+                        'text/json',
                         'application/*+json'
                     ]
                 )
@@ -2343,5 +2296,3 @@ class JobsApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-

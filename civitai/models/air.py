@@ -19,32 +19,33 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from civitai.models.base_model import BaseModel
+from civitai.models.base_model import SDBaseModel
 from civitai.models.read_only_span1 import ReadOnlySpan1
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class AIR(BaseModel):
     """
     AIR
-    """ # noqa: E501
+    """  # noqa: E501
     value: Optional[StrictStr] = None
     legacy_id: Optional[StrictStr] = Field(default=None, alias="legacyId")
-    base_model: Optional[BaseModel] = Field(default=None, alias="baseModel")
+    base_model: Optional[SDBaseModel] = Field(default=None, alias="baseModel")
     ecosystem: Optional[ReadOnlySpan1] = None
     type: Optional[ReadOnlySpan1] = None
     source: Optional[ReadOnlySpan1] = None
     id: Optional[ReadOnlySpan1] = None
     layer: Optional[ReadOnlySpan1] = None
     format: Optional[ReadOnlySpan1] = None
-    __properties: ClassVar[List[str]] = ["value", "legacyId", "baseModel", "ecosystem", "type", "source", "id", "layer", "format"]
+    __properties: ClassVar[List[str]] = ["value", "legacyId", "baseModel",
+                                         "ecosystem", "type", "source", "id", "layer", "format"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -131,5 +132,3 @@ class AIR(BaseModel):
             "format": ReadOnlySpan1.from_dict(obj["format"]) if obj.get("format") is not None else None
         })
         return _obj
-
-

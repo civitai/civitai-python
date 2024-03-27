@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from civitai.models.base_model import BaseModel
+from civitai.models.base_model import SDBaseModel
 from civitai.models.image_job_control_net import ImageJobControlNet
 from civitai.models.image_job_network_params import ImageJobNetworkParams
 from civitai.models.image_job_params import ImageJobParams
@@ -28,37 +28,49 @@ from civitai.models.time_span import TimeSpan
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class TextToImageJob(BaseModel):
     """
     TextToImageJob
-    """ # noqa: E501
+    """  # noqa: E501
     model: Optional[StrictStr] = None
     params: Optional[ImageJobParams] = None
     image_hash: Optional[StrictStr] = Field(default=None, alias="imageHash")
-    additional_networks: Optional[Dict[str, ImageJobNetworkParams]] = Field(default=None, description="Get or set a associative list of additional networks. Each network is identified by a hash code", alias="additionalNetworks")
-    destination_url: Optional[StrictStr] = Field(default=None, description="Get or set the URL where the image will be uploaded to", alias="destinationUrl")
-    base_model: Optional[BaseModel] = Field(default=None, alias="baseModel")
-    store_as_blob: Optional[StrictBool] = Field(default=None, description="Wether to store the image as a blob or as a legacy image", alias="storeAsBlob")
-    control_nets: Optional[List[ImageJobControlNet]] = Field(default=None, description="Get or set a list of control nets that should be applied with this textToImage job", alias="controlNets")
+    additional_networks: Optional[Dict[str, ImageJobNetworkParams]] = Field(
+        default=None, description="Get or set a associative list of additional networks. Each network is identified by a hash code", alias="additionalNetworks")
+    destination_url: Optional[StrictStr] = Field(
+        default=None, description="Get or set the URL where the image will be uploaded to", alias="destinationUrl")
+    base_model: Optional[SDBaseModel] = Field(default=None, alias="baseModel")
+    store_as_blob: Optional[StrictBool] = Field(
+        default=None, description="Wether to store the image as a blob or as a legacy image", alias="storeAsBlob")
+    control_nets: Optional[List[ImageJobControlNet]] = Field(
+        default=None, description="Get or set a list of control nets that should be applied with this textToImage job", alias="controlNets")
     cost: Optional[Union[StrictFloat, StrictInt]] = None
     claim_duration: Optional[TimeSpan] = Field(default=None, alias="claimDuration")
     type: Optional[StrictStr] = None
     id: Optional[StrictStr] = Field(default=None, description="A unique id for this job")
-    created_at: Optional[datetime] = Field(default=None, description="The date when this job got created", alias="createdAt")
-    expire_at: Optional[datetime] = Field(default=None, description="The date for when this job was set to expire", alias="expireAt")
-    webhook: Optional[StrictStr] = Field(default=None, description="A webhook to be invoked when the job receives a status update")
-    properties: Optional[Dict[str, Dict[str, Any]]] = Field(default=None, description="A set of user defined properties that can be used to index and partition this job")
-    max_retry_attempt: Optional[StrictInt] = Field(default=None, description="The max number of retries before we give up", alias="maxRetryAttempt")
-    dependencies: Optional[List[StrictStr]] = Field(default=None, description="Get or set a list of dependencies that this job has")
-    issued_by: Optional[StrictStr] = Field(default=None, description="Get or set the name of the consumer that issued this job", alias="issuedBy")
-    __properties: ClassVar[List[str]] = ["id", "createdAt", "expireAt", "webhook", "properties", "type", "cost", "maxRetryAttempt", "dependencies", "issuedBy", "claimDuration"]
+    created_at: Optional[datetime] = Field(
+        default=None, description="The date when this job got created", alias="createdAt")
+    expire_at: Optional[datetime] = Field(
+        default=None, description="The date for when this job was set to expire", alias="expireAt")
+    webhook: Optional[StrictStr] = Field(
+        default=None, description="A webhook to be invoked when the job receives a status update")
+    properties: Optional[Dict[str, Dict[str, Any]]] = Field(
+        default=None, description="A set of user defined properties that can be used to index and partition this job")
+    max_retry_attempt: Optional[StrictInt] = Field(
+        default=None, description="The max number of retries before we give up", alias="maxRetryAttempt")
+    dependencies: Optional[List[StrictStr]] = Field(
+        default=None, description="Get or set a list of dependencies that this job has")
+    issued_by: Optional[StrictStr] = Field(
+        default=None, description="Get or set the name of the consumer that issued this job", alias="issuedBy")
+    __properties: ClassVar[List[str]] = ["id", "createdAt", "expireAt", "webhook", "properties",
+                                         "type", "cost", "maxRetryAttempt", "dependencies", "issuedBy", "claimDuration"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -159,5 +171,3 @@ class TextToImageJob(BaseModel):
             "claimDuration": TimeSpan.from_dict(obj["claimDuration"]) if obj.get("claimDuration") is not None else None
         })
         return _obj
-
-

@@ -33,32 +33,66 @@ class Civitai:
         self.coverage_api.api_client.configuration.api_key["Authorization"] = f"Bearer {
             config['auth']}"
 
-    def from_text(self, input: Dict, wait: bool = False) -> Union[JobStatusCollection, ProblemDetails]:
-        """
-        Submits a text-to-image job to Civitai and optionally waits for completion.
+        self.image = {
+            "from_text": self.from_text,
+            "from_comfy": self.from_comfy
+        }
 
-        Parameters:
-        - input (Dict): Input dictionary containing job parameters.
-        - wait (bool, optional): Whether to wait for job completion. Defaults to False.
+        self.jobs = {
+            "get_by_token": self.get_job_status_by_token,
+            "get_by_id": self.get_job_by_id,
+            "get_by_query": self.get_jobs_by_query,
+            "cancel": self.cancel_job
+        }
 
-        Returns:
-        Union[JobStatusCollection, ProblemDetails]: The job status collection or problem details on failure.
-        """
+        self.models = {
+            "get": self.get_models
+        }
+
+    def from_text(self, input: Dict, wait=False) -> Dict:
+        """Create a text to image job."""
+
+        # Infer the baseModel from the model value
         base_model = "SDXL" if "sdxl" in input["model"] else "SD_1_5"
+
+        # Prepare job input with default values
         job_input = {
             "$type": "textToImage",
             "baseModel": base_model,
             **input
         }
-        response = self.jobs_api.post_v1_consumer_jobs(
-            wait=wait, detailed=False, job_request=job_input)
+        print("Creating TextToImage job with input=", job_input)
 
+        # Submit job and process response
+        response = self.jobs_api.v1_consumer_jobs_post(
+            wait=wait,
+            detailed=False,
+            job_template_list=job_input
+        )
+
+        modified_response = {
+            "token": response.token,
+            "jobs": [
+                {
+                    "jobId": job.job_id,
+                    "cost": job.cost,
+                    "result": job.result,
+                    "scheduled": job.scheduled
+                }
+                for job in response.jobs
+            ]
+        }
+
+        # If waiting for job completion, poll until job is done
         if wait:
-            job_result = self._poll_for_job_completion(response.token)
-            if job_result and response.jobs:
-                response.jobs[0].result = job_result
+            try:
+                job_result = self.poll_for_job_completion(response.token)
+                if job_result and len(modified_response["jobs"]) > 0:
+                    modified_response["jobs"][0]["result"] = job_result
+            except Exception as error:
+                print(f"{error}")
 
-        return response
+        return modified_response
 
     def from_comfy(self, input: Dict, wait: bool = False) -> Union[JobStatusCollection, ProblemDetails]:
         """
@@ -109,17 +143,33 @@ class Civitai:
         """
         return self.jobs_api.get_v1_consumer_jobs_1(job_id=job_id)
 
-    def get_jobs_by_token(self, token: str) -> JobStatusCollection:
+    def get_job_status_by_token(self, token: str) -> Dict:
         """
-        Retrieves jobs associated with a given token.
+        Fetches job status by token.
 
         Parameters:
         - token (str): The token associated with the jobs.
 
         Returns:
-        JobStatusCollection: The collection of jobs associated with the token.
+        Dict: The job status collection.
         """
-        return self.jobs_api.get_v1_consumer_jobs(token=token)
+        try:
+            response = self.jobs_api.v1_consumer_jobs_get(token=token)
+            modified_response = {
+                "token": token,
+                "jobs": [
+                    {
+                        "jobId": job.job_id,
+                        "cost": job.cost,
+                        "result": job.result,
+                        "scheduled": job.scheduled
+                    } for job in response.jobs
+                ]
+            }
+            return modified_response
+        except ApiException as e:
+            print(f"An error occurred: {e}")
+            return {}
 
     def get_jobs_by_query(self, query: QueryJobsRequest, detailed: bool = False) -> QueryJobsResult:
         """

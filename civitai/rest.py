@@ -88,7 +88,6 @@ class RESTClientObject:
         if configuration.tls_server_name:
             pool_args['server_hostname'] = configuration.tls_server_name
 
-
         if configuration.socket_options is not None:
             pool_args['socket_options'] = configuration.socket_options
 
@@ -158,13 +157,20 @@ class RESTClientObject:
             if isinstance(_request_timeout, (int, float)):
                 timeout = urllib3.Timeout(total=_request_timeout)
             elif (
-                    isinstance(_request_timeout, tuple)
-                    and len(_request_timeout) == 2
-                ):
+                isinstance(_request_timeout, tuple)
+                and len(_request_timeout) == 2
+            ):
                 timeout = urllib3.Timeout(
                     connect=_request_timeout[0],
                     read=_request_timeout[1]
                 )
+
+        print("REST Client - Request method:", method)
+        print("REST Client - Request URL:", url)
+        print("REST Client - Request headers:", headers)
+        print("REST Client - Request body:", body)
+        print("REST Client - Request post params:", post_params)
+        print("REST Client - Request timeout:", timeout)
 
         try:
             # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`
@@ -203,7 +209,8 @@ class RESTClientObject:
                     # overwritten.
                     del headers['Content-Type']
                     # Ensures that dict objects are serialized
-                    post_params = [(a, json.dumps(b)) if isinstance(b, dict) else (a,b) for a, b in post_params]
+                    post_params = [(a, json.dumps(b)) if isinstance(b, dict) else (a, b)
+                                   for a, b in post_params]
                     r = self.pool_manager.request(
                         method,
                         url,
