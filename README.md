@@ -17,14 +17,14 @@ To get started with the Civitai Generator Python Client, you can use the followi
 ## Installation
 
 ```python
-pip install civitai
+pip install civitai-py
 ```
 
 ## Authenticate
 
 Before running any Python scripts that use the API, you need to set your Civitai API token in your environment.
 
-Grab your token from [civitai.com/user/account](https://civitai.com/user/account) and set it as an environment variable:
+Grab your token from [civitai_py.com/user/account](https://civitai_py.com/user/account) and set it as an environment variable:
 
 ```bash
 export CIVITAI_API_TOKEN=<your token>
@@ -57,7 +57,7 @@ input = {
 Run a model:
 
 ```python
-response = civitai.image.create(input)
+response = civitai_py.image.create(input)
 ```
 
 _Note: Jobs timeout after 5 minutes._
@@ -95,12 +95,12 @@ In the case of `Lora` and `LoCon` networks, set the `strength` of the network; f
 
 <br/>
 
-### `civitai.image.create`
+### `civitai_py.image.create`
 
 Run a model with inputs you provide.
 
 ```python
-response = civitai.image.create(options)
+response = civitai_py.image.create(options)
 ```
 
 | name                    | type                                                                  | description                                                                                                                                                                                                                                                                                                                               |
@@ -137,21 +137,21 @@ response = civitai.image.create(options)
 | `endStep`      | number \| null                                                | Optional. The step at which the control net stops applying.                                                                                                                            |
 | `imageUrl`     | string \| null                                                | Optional. The URL of the image associated with the controlnet.                                                                                                                         |
 
-### `civitai.jobs.get`
+### `civitai_py.jobs.get`
 
 Fetches job details based on a provided token or job ID. If both are provided, the token takes precedence.
 
 ```python
 job_id = "your_job_id_here"
-response = civitai.jobs.get(id=job_id)
+response = civitai_py.jobs.get(id=job_id)
 
 # OR
 
 token = "your_token_here"
-response = civitai.jobs.get(token=token)
+response = civitai_py.jobs.get(token=token)
 ```
 
-### `civitai.jobs.query`
+### `civitai_py.jobs.query`
 
 Retrieve a collection of jobs by querying properties, e.g., userId. You can optionally include a `detailed` boolean flag to get detailed information about the jobs.
 
@@ -164,15 +164,15 @@ query = {
 
 detailed = False  # Optional boolean flag to get detailed job definitions. False by default.
 
-response = civitai.jobs.query(detailed=detailed, query_jobs_request=query)
+response = civitai_py.jobs.query(detailed=detailed, query_jobs_request=query)
 ```
 
-### `civitai.jobs.cancel`
+### `civitai_py.jobs.cancel`
 
 Cancel a job by its jobId.
 
 ```python
-response = civitai.jobs.cancel(job_id)
+response = civitai_py.jobs.cancel(job_id)
 ```
 
 This method cancels a job that is currently scheduled or running. It requires the `jobId` of the job you wish to cancel. On successful cancellation, it returns a response object indicating the cancellation status.

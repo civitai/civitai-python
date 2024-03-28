@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "civitai"
-version = "1.0.0"
+name = "civitai-py"
+version = "0.1.1"
 description = "Civitai Python SDK"
 authors = ["Civitai <hello@civitai.com>"]
 license = "MIT"
@@ -33,7 +33,7 @@ extension-pkg-whitelist = "pydantic"
 [tool.mypy]
 files = [
     "civitai",
-    "test",
+    "tests",
 ]
 
 # TODO: enable "strict" once all these individual checks are passing
