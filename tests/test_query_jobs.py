@@ -1,6 +1,6 @@
 # test/test_query_jobs.py
 import unittest
-import civitai
+import civitai_py as civitai
 import json
 
 
@@ -14,7 +14,7 @@ class TestJobQuery(unittest.TestCase):
         }
 
         # Perform the query.
-        response = civitai_py.jobs.query(
+        response = civitai.jobs.query(
             detailed=True,
             query_jobs_request=query
         )
