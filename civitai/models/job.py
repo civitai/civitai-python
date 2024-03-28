@@ -24,29 +24,38 @@ from civitai.models.time_span import TimeSpan
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class Job(BaseModel):
     """
     Job
-    """ # noqa: E501
+    """  # noqa: E501
     id: Optional[StrictStr] = Field(default=None, description="A unique id for this job")
-    created_at: Optional[datetime] = Field(default=None, description="The date when this job got created", alias="createdAt")
-    expire_at: Optional[datetime] = Field(default=None, description="The date for when this job was set to expire", alias="expireAt")
-    webhook: Optional[StrictStr] = Field(default=None, description="A webhook to be invoked when the job receives a status update")
-    properties: Optional[Dict[str, Any]] = Field(default=None, description="A set of user defined properties that can be used to index and partition this job")
+    created_at: Optional[datetime] = Field(
+        default=None, description="The date when this job got created", alias="createdAt")
+    expire_at: Optional[datetime] = Field(
+        default=None, description="The date for when this job was set to expire", alias="expireAt")
+    webhook: Optional[StrictStr] = Field(
+        default=None, description="A webhook to be invoked when the job receives a status update")
+    properties: Optional[Dict[str, Any]] = Field(
+        default=None, description="A set of user defined properties that can be used to index and partition this job")
     type: Optional[StrictStr] = Field(default=None, description="The type of this job as a string")
-    cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Get a cost estimate for this job")
-    max_retry_attempt: Optional[StrictInt] = Field(default=None, description="The max number of retries before we give up", alias="maxRetryAttempt")
-    dependencies: Optional[List[StrictStr]] = Field(default=None, description="Get or set a list of dependencies that this job has")
-    issued_by: Optional[StrictStr] = Field(default=None, description="Get or set the name of the consumer that issued this job", alias="issuedBy")
+    cost: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="Get a cost estimate for this job")
+    max_retry_attempt: Optional[StrictInt] = Field(
+        default=None, description="The max number of retries before we give up", alias="maxRetryAttempt")
+    dependencies: Optional[List[StrictStr]] = Field(
+        default=None, description="Get or set a list of dependencies that this job has")
+    issued_by: Optional[StrictStr] = Field(
+        default=None, description="Get or set the name of the consumer that issued this job", alias="issuedBy")
     claim_duration: Optional[TimeSpan] = Field(default=None, alias="claimDuration")
-    __properties: ClassVar[List[str]] = ["id", "createdAt", "expireAt", "webhook", "properties", "type", "cost", "maxRetryAttempt", "dependencies", "issuedBy", "claimDuration"]
+    __properties: ClassVar[List[str]] = ["id", "createdAt", "expireAt", "webhook", "properties",
+                                         "type", "cost", "maxRetryAttempt", "dependencies", "issuedBy", "claimDuration"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -144,8 +153,6 @@ class Job(BaseModel):
             "maxRetryAttempt": obj.get("maxRetryAttempt"),
             "dependencies": obj.get("dependencies"),
             "issuedBy": obj.get("issuedBy"),
-            "claimDuration": TimeSpan.from_dict(obj["claimDuration"]) if obj.get("claimDuration") is not None else None
+            "claimDuration": obj.from_dict(obj["claimDuration"]) if obj.get("claimDuration") is not None else None
         })
         return _obj
-
-

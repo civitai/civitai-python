@@ -258,7 +258,17 @@ class Civitai:
 
             # Validate input using Pydantic
             try:
-                validated_input = FromTextSchema(**input)
+                input_data = {
+                    "model": input["model"],
+                    "params": input["params"],
+                    "additionalNetworks": input.get("additionalNetworks", {}),
+                    "controlNets": input.get("controlNets", []),
+                    "callbackUrl": input.get("callbackUrl", ""),
+                    "quantity": input.get("quantity", 1),
+                    "properties": input.get("properties", {})
+                }
+
+                validated_input = FromTextSchema(**input_data)
             except ValueError as e:
                 raise ValueError(f"Validation error: {str(e)}")
 

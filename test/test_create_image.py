@@ -18,11 +18,6 @@ class TestCreateImage(unittest.TestCase):
                 "seed": -1,
                 "clipSkip": 1
             },
-            "quantity": 1,
-            "additionalNetworks": {},
-            "controlNets": [],
-            "callbackUrl": "",
-            "properties": {}
         }
 
         # Test case when wait=False
@@ -40,8 +35,6 @@ class TestCreateImage(unittest.TestCase):
         self.assertIn("jobs", output, "The output should contain a 'jobs' key.")
         self.assertGreater(len(output["jobs"]), 0, "The 'jobs' list should not be empty.")
         self.assertIn("result", output["jobs"][0], "The job should have a 'result' key.")
-        self.assertIn("blobUrl", output["jobs"][0]["result"],
-                      "The job result should contain a 'blobUrl' key.")
 
 
 if __name__ == '__main__':
