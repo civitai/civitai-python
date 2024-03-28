@@ -177,7 +177,7 @@ response = civitai.jobs.query(detailed=detailed, query_jobs_request=query)
 
 Cancel a job by its jobId.
 
-python
+```python
 response = civitai.jobs.cancel(job_id)
 
 ```
@@ -200,4 +200,3 @@ Your contributions will be reviewed, and if accepted, merged into the project.
 - Update the documentation if necessary.
 
 Thank you for contributing to the Civitai Generator Python Client! 🥹🤭
-```
