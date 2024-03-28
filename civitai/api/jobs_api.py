@@ -1425,7 +1425,7 @@ class JobsApi:
             _request_auth=_request_auth
         )
 
-    # @validate_call
+    @validate_call
     def v1_consumer_jobs_post(
         self,
         wait: Optional[bool] = None,
@@ -1469,7 +1469,6 @@ class JobsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        print("job_template_list", job_template_list)
         _param = self._v1_consumer_jobs_post_serialize(
             wait=wait,
             detailed=detailed,
@@ -1485,17 +1484,18 @@ class JobsApi:
             '202': None,
             '400': "ProblemDetails",
         }
-        print("API parameters:", _param)
 
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
-        return self.api_client.response_deserialize(
+
+        deserialized_data = self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
+
+        return deserialized_data
 
     @validate_call
     def v1_consumer_jobs_post_with_http_info(

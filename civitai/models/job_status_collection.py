@@ -1,4 +1,4 @@
-# coding: utf-8
+# job_status_collection.py
 
 """
     Civitai Orchestration Consumer API
@@ -23,12 +23,15 @@ from civitai.models.job_status import JobStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class JobStatusCollection(BaseModel):
     """
     JobStatusCollection
-    """ # noqa: E501
-    token: Optional[StrictStr] = Field(default=None, description="A token that can be used to get a status update on all the jobs in the collection")
-    jobs: Optional[List[JobStatus]] = Field(default=None, description="A list of individual statuses for each generated job")
+    """  # noqa: E501
+    token: Optional[StrictStr] = Field(
+        default=None, description="A token that can be used to get a status update on all the jobs in the collection")
+    jobs: Optional[List[JobStatus]] = Field(
+        default=None, description="A list of individual statuses for each generated job")
     __properties: ClassVar[List[str]] = ["token", "jobs"]
 
     model_config = ConfigDict(
@@ -36,7 +39,6 @@ class JobStatusCollection(BaseModel):
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -98,5 +100,3 @@ class JobStatusCollection(BaseModel):
             "jobs": [JobStatus.from_dict(_item) for _item in obj["jobs"]] if obj.get("jobs") is not None else None
         })
         return _obj
-
-

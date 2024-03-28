@@ -124,19 +124,20 @@ class TimeSpan(BaseModel):
         if time_str is None:
             return None
 
-        # Parse the string representation (e.g., '00:00:30')
-        parts = time_str.split(':')
-        if len(parts) != 3:
-            raise ValueError(f"Invalid time string format: {time_str}")
-
-        hours, minutes, seconds = map(int, parts)
-
-        # Create an instance of TimeSpan with the parsed values
-        return cls(
-            hours=hours,
-            minutes=minutes,
-            seconds=seconds
-        )
+        try:
+            parts = time_str.split(':')
+            if len(parts) == 3:
+                hours, minutes, seconds = map(int, parts)
+                return cls(
+                    hours=hours,
+                    minutes=minutes,
+                    seconds=seconds
+                )
+            else:
+                raise ValueError(f"Invalid time string format: {time_str}")
+        except ValueError:
+            # If the string can't be parsed as HH:MM:SS, return the original string
+            return cls(ticks=time_str)
 
     @classmethod
     def from_dict(cls, obj: Optional[Union[str, Dict[str, Any]]]) -> Optional[Self]:

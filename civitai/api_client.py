@@ -1,4 +1,4 @@
-# coding: utf-8
+# api_client.py
 
 """
     Civitai Orchestration Consumer API
@@ -288,6 +288,7 @@ class ApiClient:
             self.logger.debug(f"Response Body: {response_data.data}")
 
         except ApiException as e:
+            self.logger.error(f"Exception when calling API: {e}")
             raise e
 
         return response_data
@@ -303,8 +304,9 @@ class ApiClient:
         :return: ApiResponse
         """
 
-        msg = "RESTResponse.read() must be called before passing it to response_deserialize()"
-        assert response_data.data is not None, msg
+        # Read the response data if it hasn't been read yet
+        if response_data.data is None:
+            response_data.data = response_data.read()
 
         response_type = response_types_map.get(str(response_data.status), None)
         if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
@@ -610,9 +612,6 @@ class ApiClient:
         :param request_auth: if set, the provided settings will
                              override the token in the configuration.
         """
-
-        print("Authentication settings:", auth_settings)
-        print("Request auth:", request_auth)
 
         if not auth_settings:
             return

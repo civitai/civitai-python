@@ -165,13 +165,6 @@ class RESTClientObject:
                     read=_request_timeout[1]
                 )
 
-        print("REST Client - Request method:", method)
-        print("REST Client - Request URL:", url)
-        print("REST Client - Request headers:", headers)
-        print("REST Client - Request body:", body)
-        print("REST Client - Request post params:", post_params)
-        print("REST Client - Request timeout:", timeout)
-
         try:
             # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`
             if method in ['POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE']:
