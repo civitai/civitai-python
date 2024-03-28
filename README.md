@@ -8,31 +8,31 @@ A Python client for Civitai's generator to run Civitai models from your Python c
 pip install civitai
 ```
 
+## Authenticate
+
+Before running any Python scripts that use the API, you need to set your Civitai API token in your environment.
+
+Grab your token from [civitai.com/user/account](https://civitai.com/user/account) and set it as an environment variable:
+
+```bash
+export CIVITAI_API_TOKEN=<your token>
+```
+
 ## Requirements
 
-- Python 3.8+
+- Python 3.7+
 
 ## Usage
-
-#### Create the client:
-
-```python
-from civitai import Civitai
-
-civitai = Civitai(auth="YOUR_API_TOKEN")
-```
 
 #### Create a txt2img job:
 
 ```python
-from civitai import Scheduler
-
 input = {
     "model": "urn:air:sd1:checkpoint:civitai:4201@130072",
     "params": {
         "prompt": "RAW photo, face portrait photo of 26 y.o woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
         "negativePrompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated hands and fingers:1.4), (deformed, distorted, disfigured:1.3)",
-        "scheduler": Scheduler.EULER_A,
+        "scheduler": "EulerA",
         "steps": 20,
         "cfgScale": 7,
         "width": 512,
@@ -45,22 +45,10 @@ input = {
 Run a model:
 
 ```python
-response = civitai.image.from_text(input)
+response = civitai.image.create(input)
 ```
 
-Then fetch the result later:
-
-```python
-output = civitai.jobs.get_by_token(response["token"])
-```
-
-Or wait for the job to finish by running the generation in the background a.k.a long polling:
-
-```python
-response = civitai.image.from_text(input, wait=True)  # Add wait flag
-```
-
-_Note: Jobs timeout after 10 minutes._
+_Note: Jobs timeout after 5 minutes._
 
 ### Using Additional Networks
 
@@ -69,14 +57,12 @@ The SDK supports additional networks: LoRA, VAE, Hypernetwork, Textual Inversion
 To use any of the networks availabe on Civitai, simply the `additionNetworks` field into the input:
 
 ```python
-from civitai import Scheduler, AssetType
-
 input = {
     "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
     "params": {
         "prompt": "masterpiece, best quality, 1girl, IncrsAhri, multiple tails, fox tail, korean clothes, skirt, braid, arms behind back",
         "negativePrompt": "(worst quality:1.4), (low quality:1.4), simple background, bad anatomy",
-        "scheduler": Scheduler.EULER_A,
+        "scheduler": "EulerA",
         "steps": 25,
         "cfgScale": 7,
         "width": 512,
@@ -86,7 +72,7 @@ input = {
     },
     "additional_networks": {
         "urn:air:sd1:lora:civitai:162141@182559": {
-            "type": AssetType.LORA,
+            "type": "Lora",
             "strength": 1.0
         }
     }
@@ -97,25 +83,12 @@ In the case of `Lora` and `LoCon` networks, set the `strength` of the network; f
 
 <br/>
 
-## API
-
-### Constructor
-
-```python
-civitai = Civitai(options)
-```
-
-| name   | type                  | description                                                |
-| ------ | --------------------- | ---------------------------------------------------------- |
-| `auth` | string                | **Required**. API access token                             |
-| `env`  | `dev` \| `production` | Optional. The environment to use. Default is `production`. |
-
-### `civitai.image.from_text`
+### `civitai.image.create`
 
 Run a model with inputs you provide.
 
 ```python
-response = civitai.image.from_text(options)
+response = civitai.image.create(options)
 ```
 
 | name                    | type                                                                  | description                                                                                                                                                                                                                                                                                                                               |
@@ -152,15 +125,21 @@ response = civitai.image.from_text(options)
 | `endStep`      | number \| null                                                | Optional. The step at which the control net stops applying.                                                                                                                            |
 | `imageUrl`     | string \| null                                                | Optional. The URL of the image associated with the controlnet.                                                                                                                         |
 
-### `civitai.jobs.get_by_id`
+### `civitai.jobs.get`
 
-Fetches the status of a job by its unique jobId.
+Fetches job details based on a provided token or job ID. If both are provided, the token takes precedence.
 
 ```python
-response = civitai.jobs.get_by_id(job_id)
+job_id = "your_job_id_here"
+response = civitai.jobs.get(id=job_id)
+
+# OR
+
+token = "your_token_here"
+response = civitai.jobs.get(token=token)
 ```
 
-### `civitai.jobs.get_by_query`
+### `civitai.jobs.query`
 
 Retrieve a collection of jobs by querying properties, e.g., userId. You can optionally include a `detailed` boolean flag to get detailed information about the jobs.
 
@@ -170,8 +149,10 @@ query = {
         "userId": 4  # Querying by userId
     }
 }
+
 detailed = False  # Optional boolean flag to get detailed job definitions. False by default.
-response = civitai.jobs.get_by_query(query, detailed)
+
+response = civitai.jobs.query(detailed=detailed, query_jobs_request=query)
 ```
 
 ### `civitai.jobs.cancel`
@@ -183,19 +164,6 @@ response = civitai.jobs.cancel(job_id)
 ```
 
 This method cancels a job that is currently scheduled or running. It requires the `jobId` of the job you wish to cancel. On successful cancellation, it returns a response object indicating the cancellation status.
-
-### `civitai.models.get`
-
-To check the coverage of specific models, you can use the `civitai.models.get` method. This method retrieves the availability of the requested models.
-
-```python
-models = [
-    "urn:air:sd1:checkpoint:civitai:107842@275408",
-    "urn:air:sd1:lora:civitai:162141@182559"
-]
-coverage = civitai.models.get(models)
-print("Model coverage:", coverage)
-```
 
 ### Contributing Your Changes
 

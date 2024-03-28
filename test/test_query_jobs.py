@@ -6,17 +6,17 @@ import json
 
 class TestJobQuery(unittest.TestCase):
     def test_query_job_status(self):
-        query_jobs_request = civitai.QueryJobsRequest(
-            properties={
+        query = {
+            "properties": {
                 "userId": 4,
                 "modelId": 359773,
             },
-        )
+        }
 
         # Perform the query.
         response = civitai.jobs.query(
             detailed=True,
-            query_jobs_request=query_jobs_request
+            query_jobs_request=query
         )
 
         print("Response", response)

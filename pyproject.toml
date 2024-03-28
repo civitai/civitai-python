@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "civitai"
 version = "1.0.0"
-description = "Civitai Orchestration Consumer API"
+description = "Civitai Python SDK"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "NoLicense"
 readme = "README.md"
-repository = "https://github.com/GIT_USER_ID/GIT_REPO_ID"
-keywords = ["OpenAPI", "OpenAPI-Generator", "Civitai Orchestration Consumer API"]
+repository = "https://github.com/civitai/civitai-python"
+keywords=["Civitai Python SDK", "Civitai"],
 include = ["civitai/py.typed"]
 
 [tool.poetry.dependencies]
