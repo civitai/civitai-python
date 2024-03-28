@@ -154,6 +154,18 @@ class Civitai:
             self.civitai = civitai
 
         def get(self, token=None, id=None):
+            """
+            Retrieves job details based on a provided token or job ID.
+
+            This method allows for fetching job details by either specifying a token or a job ID. If a token is provided, it fetches the job associated with that token. If a job ID is provided, it fetches the job details for that specific job ID. At least one of the parameters must be provided, or a ValueError is raised.
+
+            :param token: The token associated with a job. This is optional and exclusive with `id`.
+            :type token: str, optional
+            :param id: The unique identifier of the job. This is optional and exclusive with `token`.
+            :type id: str, optional
+            :return: A filtered response containing job details such as job ID, cost, result, and scheduled time.
+            :rtype: dict
+            """
             response = None
             if token:
                 full_response = self.civitai.jobs_api.v1_consumer_jobs_get(
@@ -170,7 +182,6 @@ class Civitai:
         @staticmethod
         def _filter_response(full_response):
             filtered_jobs = []
-
             for job in full_response.jobs:
                 filtered_job = {
                     "jobId": job.job_id,
@@ -179,7 +190,6 @@ class Civitai:
                     "scheduled": job.scheduled,
                 }
                 filtered_jobs.append(filtered_job)
-
             filtered_response = {
                 "token": full_response.token,
                 "jobs": filtered_jobs,
@@ -187,11 +197,20 @@ class Civitai:
 
             return filtered_response
 
-        def get_by_query(self, query, detailed=False):
-            return self.civitai.jobs_api.v1_consumer_jobs_query_post(query=query, detailed=detailed)
+        def query(self, detailed=False, query_jobs_request=None):
+            """
+            Query for previously submitted jobs based on criteria.
 
-        def cancel(self, job_id):
-            return self.civitai.jobs_api.v1_consumer_jobs_cancel(job_id=job_id, force=True)
+            :param detailed: Whether to include the original job definition.
+            :param query_jobs_request: The request object containing query criteria.
+            :return: A filtered response based on the query.
+            """
+            # Call the API method with the provided parameters.
+            response = self.civitai.jobs_api.v1_consumer_jobs_query_post(
+                detailed=detailed,
+                query_jobs_request=query_jobs_request
+            )
+            return response.to_json()
 
     # @property
     # def models(self):

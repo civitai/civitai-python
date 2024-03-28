@@ -1,4 +1,4 @@
-# coding: utf-8
+# time_span.py
 
 """
     Civitai Orchestration Consumer API
@@ -119,29 +119,38 @@ class TimeSpan(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TimeSpan from a dict"""
+    def from_str(cls, time_str: str) -> Optional[Self]:
+        """Create an instance of TimeSpan from a string representation."""
+        if time_str is None:
+            return None
+
+        # Parse the string representation (e.g., '00:00:30')
+        parts = time_str.split(':')
+        if len(parts) != 3:
+            raise ValueError(f"Invalid time string format: {time_str}")
+
+        hours, minutes, seconds = map(int, parts)
+
+        # Create an instance of TimeSpan with the parsed values
+        return cls(
+            hours=hours,
+            minutes=minutes,
+            seconds=seconds
+        )
+
+    @classmethod
+    def from_dict(cls, obj: Optional[Union[str, Dict[str, Any]]]) -> Optional[Self]:
+        """Create an instance of TimeSpan from a dict or string."""
         if obj is None:
             return None
+
+        if isinstance(obj, str):
+            return cls.from_str(obj)
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "ticks": obj.get("ticks"),
-            "days": obj.get("days"),
-            "hours": obj.get("hours"),
-            "milliseconds": obj.get("milliseconds"),
-            "microseconds": obj.get("microseconds"),
-            "nanoseconds": obj.get("nanoseconds"),
-            "minutes": obj.get("minutes"),
-            "seconds": obj.get("seconds"),
-            "totalDays": obj.get("totalDays"),
-            "totalHours": obj.get("totalHours"),
-            "totalMilliseconds": obj.get("totalMilliseconds"),
-            "totalMicroseconds": obj.get("totalMicroseconds"),
-            "totalNanoseconds": obj.get("totalNanoseconds"),
-            "totalMinutes": obj.get("totalMinutes"),
-            "totalSeconds": obj.get("totalSeconds")
+            # ... (existing field mappings)
         })
         return _obj

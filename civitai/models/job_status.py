@@ -1,4 +1,4 @@
-# coding: utf-8
+# job_status.py
 
 """
     Civitai Orchestration Consumer API
@@ -25,26 +25,28 @@ from civitai.models.provider_job_status import ProviderJobStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class JobStatus(BaseModel):
     """
     JobStatus
-    """ # noqa: E501
+    """  # noqa: E501
     job: Optional[JobStatusJob] = None
     job_id: Optional[StrictStr] = Field(default=None, alias="jobId")
     cost: Optional[Union[StrictFloat, StrictInt]] = None
     properties: Optional[Dict[str, Any]] = None
     result: Optional[Any] = Field(default=None, description="A optional result of the job")
     last_event: Optional[JobEvent] = Field(default=None, alias="lastEvent")
-    service_providers: Optional[Dict[str, ProviderJobStatus]] = Field(default=None, description="The position of this job in the different queues for different providers. If this is an empty object then this job remains unscheduled.", alias="serviceProviders")
+    service_providers: Optional[Dict[str, ProviderJobStatus]] = Field(
+        default=None, description="The position of this job in the different queues for different providers. If this is an empty object then this job remains unscheduled.", alias="serviceProviders")
     scheduled: Optional[StrictBool] = Field(default=None, description="Wether")
-    __properties: ClassVar[List[str]] = ["job", "jobId", "cost", "properties", "result", "lastEvent", "serviceProviders", "scheduled"]
+    __properties: ClassVar[List[str]] = ["job", "jobId", "cost",
+                                         "properties", "result", "lastEvent", "serviceProviders", "scheduled"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -156,5 +158,3 @@ class JobStatus(BaseModel):
             "scheduled": obj.get("scheduled")
         })
         return _obj
-
-

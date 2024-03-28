@@ -1,4 +1,4 @@
-# coding: utf-8
+# query_jobs_request.py
 
 """
     Civitai Orchestration Consumer API
@@ -22,10 +22,11 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class QueryJobsRequest(BaseModel):
     """
     QueryJobsRequest
-    """ # noqa: E501
+    """  # noqa: E501
     cursor: Optional[StrictStr] = None
     properties: Optional[Dict[str, Any]] = None
     __properties: ClassVar[List[str]] = ["cursor", "properties"]
@@ -35,7 +36,6 @@ class QueryJobsRequest(BaseModel):
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -90,10 +90,18 @@ class QueryJobsRequest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        # Handle properties field
+        properties = obj.get("properties")
+        if properties is not None:
+            # Convert values to dictionaries if they are not already
+            properties = {
+                key: {"value": value} if not isinstance(value, dict) else value
+                for key, value in properties.items()
+            }
+            obj["properties"] = properties
+
         _obj = cls.model_validate({
             "cursor": obj.get("cursor"),
             "properties": obj.get("properties")
         })
         return _obj
-
-

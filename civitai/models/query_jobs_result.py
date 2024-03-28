@@ -1,4 +1,4 @@
-# coding: utf-8
+# query_jobs_result.py
 
 """
     Civitai Orchestration Consumer API
@@ -23,10 +23,11 @@ from civitai.models.job_status import JobStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
+
 class QueryJobsResult(BaseModel):
     """
     QueryJobsResult
-    """ # noqa: E501
+    """  # noqa: E501
     cursor: Optional[StrictStr] = None
     jobs: Optional[List[JobStatus]] = None
     __properties: ClassVar[List[str]] = ["cursor", "jobs"]
@@ -36,7 +37,6 @@ class QueryJobsResult(BaseModel):
         validate_assignment=True,
         protected_namespaces=(),
     )
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -98,5 +98,3 @@ class QueryJobsResult(BaseModel):
             "jobs": [JobStatus.from_dict(_item) for _item in obj["jobs"]] if obj.get("jobs") is not None else None
         })
         return _obj
-
-

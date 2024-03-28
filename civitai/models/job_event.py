@@ -1,4 +1,4 @@
-# coding: utf-8
+# job_event.py
 
 """
     Civitai Orchestration Consumer API
@@ -101,12 +101,22 @@ class JobEvent(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of claim_duration
-        if self.claim_duration:
+        # override the default output from pydantic by calling `to_dict()` of claim_duration if it's a TimeSpan object
+        if isinstance(self.claim_duration, TimeSpan):
             _dict['claimDuration'] = self.claim_duration.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of job_duration
-        if self.job_duration:
+        else:
+            _dict['claimDuration'] = self.claim_duration
+
+        # override the default output from pydantic by calling `to_dict()` of job_duration if it's a TimeSpan object
+        if isinstance(self.job_duration, TimeSpan):
             _dict['jobDuration'] = self.job_duration.to_dict()
+        else:
+            _dict['jobDuration'] = self.job_duration
+
+        # convert dateTime to ISO 8601 string format
+        if self.date_time:
+            _dict['dateTime'] = self.date_time.isoformat()
+
         # set to None if job_id (nullable) is None
         # and model_fields_set contains the field
         if self.job_id is None and "job_id" in self.model_fields_set:
@@ -150,8 +160,8 @@ class JobEvent(BaseModel):
             "provider": obj.get("provider"),
             "workerId": obj.get("workerId"),
             "context": obj.get("context"),
-            "claimDuration": obj["claimDuration"] if obj.get("claimDuration") is not None else None,
-            "jobDuration": obj["jobDuration"] if obj.get("jobDuration") is not None else None,
+            "claimDuration": TimeSpan.from_dict(obj["claimDuration"]) if isinstance(obj.get("claimDuration"), dict) else obj.get("claimDuration"),
+            "jobDuration": TimeSpan.from_dict(obj["jobDuration"]) if isinstance(obj.get("jobDuration"), dict) else obj.get("jobDuration"),
             "retryAttempt": obj.get("retryAttempt"),
             "cost": obj.get("cost"),
             "jobProperties": obj.get("jobProperties"),

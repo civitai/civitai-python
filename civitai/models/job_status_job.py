@@ -1,4 +1,4 @@
-# coding: utf-8
+# job_status_job.py
 
 """
     Civitai Orchestration Consumer API
@@ -32,7 +32,9 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-JOBSTATUSJOB_ONE_OF_SCHEMAS = ["ComfyJob", "ImageEmbeddingJob", "ImageResourceTrainingJob", "ImageTransformJob", "MediaTaggingJob", "PinModelJob", "PingJob", "PrepareModelJob", "RebootWorkerJob", "TextToImageJob", "WDTaggingJob"]
+JOBSTATUSJOB_ONE_OF_SCHEMAS = ["ComfyJob", "ImageEmbeddingJob", "ImageResourceTrainingJob", "ImageTransformJob",
+                               "MediaTaggingJob", "PinModelJob", "PingJob", "PrepareModelJob", "RebootWorkerJob", "TextToImageJob", "WDTaggingJob"]
+
 
 class JobStatusJob(BaseModel):
     """
@@ -60,21 +62,24 @@ class JobStatusJob(BaseModel):
     oneof_schema_10_validator: Optional[PinModelJob] = None
     # data type: RebootWorkerJob
     oneof_schema_11_validator: Optional[RebootWorkerJob] = None
-    actual_instance: Optional[Union[ComfyJob, ImageEmbeddingJob, ImageResourceTrainingJob, ImageTransformJob, MediaTaggingJob, PinModelJob, PingJob, PrepareModelJob, RebootWorkerJob, TextToImageJob, WDTaggingJob]] = None
-    one_of_schemas: Set[str] = { "ComfyJob", "ImageEmbeddingJob", "ImageResourceTrainingJob", "ImageTransformJob", "MediaTaggingJob", "PinModelJob", "PingJob", "PrepareModelJob", "RebootWorkerJob", "TextToImageJob", "WDTaggingJob" }
+    actual_instance: Optional[Union[ComfyJob, ImageEmbeddingJob, ImageResourceTrainingJob, ImageTransformJob,
+                                    MediaTaggingJob, PinModelJob, PingJob, PrepareModelJob, RebootWorkerJob, TextToImageJob, WDTaggingJob]] = None
+    one_of_schemas: Set[str] = {"ComfyJob", "ImageEmbeddingJob", "ImageResourceTrainingJob", "ImageTransformJob",
+                                "MediaTaggingJob", "PinModelJob", "PingJob", "PrepareModelJob", "RebootWorkerJob", "TextToImageJob", "WDTaggingJob"}
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
-
     def __init__(self, *args, **kwargs) -> None:
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`")
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used.")
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
@@ -99,7 +104,8 @@ class JobStatusJob(BaseModel):
             match += 1
         # validate data type: ImageResourceTrainingJob
         if not isinstance(v, ImageResourceTrainingJob):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `ImageResourceTrainingJob`")
+            error_messages.append(f"Error! Input type `{
+                                  type(v)}` is not `ImageResourceTrainingJob`")
         else:
             match += 1
         # validate data type: ImageTransformJob
@@ -152,8 +158,30 @@ class JobStatusJob(BaseModel):
             return v
 
     @classmethod
-    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
-        return cls.from_json(json.dumps(obj))
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
+        """Create an instance of JobStatus from a dict"""
+        if obj is None:
+            return None
+
+        if not isinstance(obj, dict):
+            return cls.model_validate(obj)
+
+        _obj = cls.model_validate({
+            "job": JobStatusJob.from_dict(obj["job"]) if obj.get("job") is not None else None,
+            "jobId": obj.get("jobId"),
+            "cost": obj.get("cost"),
+            "properties": obj.get("properties"),
+            "result": obj.get("result"),
+            "lastEvent": JobEvent.from_dict(obj["lastEvent"]) if obj.get("lastEvent") is not None else None,
+            "serviceProviders": dict(
+                (_k, ProviderJobStatus.from_dict(_v))
+                for _k, _v in obj["serviceProviders"].items()
+            )
+            if obj.get("serviceProviders") is not None
+            else None,
+            "scheduled": obj.get("scheduled")
+        })
+        return _obj
 
     @classmethod
     def from_json(cls, json_str: Optional[str]) -> Self:
@@ -265,5 +293,3 @@ class JobStatusJob(BaseModel):
     def to_str(self) -> str:
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
-
-

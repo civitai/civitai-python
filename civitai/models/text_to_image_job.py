@@ -1,4 +1,4 @@
-# coding: utf-8
+# text_to_image_job.py
 
 """
     Civitai Orchestration Consumer API
