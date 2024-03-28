@@ -2,6 +2,14 @@
 
 A Python client for Civitai's generator to run Civitai models from your Python code.
 
+## Quick Start
+
+To get started with the Civitai Generator Python Client, you can use the following resources:
+
+- **Google Colab Notebook**: Jump into a pre-configured environment with a live notebook to try out the Civitai SDK. [Launch Google Colab](https://colab.research.google.com/path_to_your_notebook)
+
+- **Streamlit Demo**: See the Civitai SDK in action with a live Streamlit app demo. [View Streamlit Demo](https://share.streamlit.io/path_to_your_streamlit_app)
+
 ## Installation
 
 ```python
