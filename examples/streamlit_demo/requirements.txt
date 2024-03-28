@@ -1,0 +1,2 @@
+streamlit
+civitai_py==0.1.1
