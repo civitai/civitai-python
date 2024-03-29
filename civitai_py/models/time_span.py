@@ -119,39 +119,42 @@ class TimeSpan(BaseModel):
         return _dict
 
     @classmethod
-    def from_str(cls, time_str: str) -> Optional[Self]:
-        """Create an instance of TimeSpan from a string representation."""
-        if time_str is None:
-            return None
-
-        try:
-            parts = time_str.split(':')
-            if len(parts) == 3:
-                hours, minutes, seconds = map(int, parts)
-                return cls(
-                    hours=hours,
-                    minutes=minutes,
-                    seconds=seconds
-                )
-            else:
-                raise ValueError(f"Invalid time string format: {time_str}")
-        except ValueError:
-            # If the string can't be parsed as HH:MM:SS, return the original string
-            return cls(ticks=time_str)
-
-    @classmethod
-    def from_dict(cls, obj: Optional[Union[str, Dict[str, Any]]]) -> Optional[Self]:
-        """Create an instance of TimeSpan from a dict or string."""
+    def from_dict(cls, obj: Optional[Union[Dict[str, Any], str]]) -> Optional[Self]:
+        """Create an instance of TimeSpan from a dict or a string"""
         if obj is None:
             return None
 
         if isinstance(obj, str):
-            return cls.from_str(obj)
+            # Parse the string representation of TimeSpan
+            time_parts = obj.split(':')
+            if len(time_parts) == 3:
+                hours, minutes, seconds = map(int, time_parts)
+                obj = {
+                    'hours': hours,
+                    'minutes': minutes,
+                    'seconds': seconds
+                }
+            else:
+                raise ValueError(f"Invalid TimeSpan string format: {obj}")
 
         if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+            raise ValueError(f"Invalid input type for TimeSpan: {type(obj)}")
 
         _obj = cls.model_validate({
-            # ... (existing field mappings)
+            "ticks": obj.get("ticks"),
+            "days": obj.get("days"),
+            "hours": obj.get("hours"),
+            "milliseconds": obj.get("milliseconds"),
+            "microseconds": obj.get("microseconds"),
+            "nanoseconds": obj.get("nanoseconds"),
+            "minutes": obj.get("minutes"),
+            "seconds": obj.get("seconds"),
+            "totalDays": obj.get("totalDays"),
+            "totalHours": obj.get("totalHours"),
+            "totalMilliseconds": obj.get("totalMilliseconds"),
+            "totalMicroseconds": obj.get("totalMicroseconds"),
+            "totalNanoseconds": obj.get("totalNanoseconds"),
+            "totalMinutes": obj.get("totalMinutes"),
+            "totalSeconds": obj.get("totalSeconds")
         })
         return _obj

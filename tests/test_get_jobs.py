@@ -24,7 +24,7 @@ class TestGetJobStatus(unittest.TestCase):
         job_id = 'f1f4eee6-d1ee-4a82-a063-2c451823a86b'  # Replace with a valid job ID
 
         # the response should correspond to the job associated with the token.
-        response = civitai_py.jobs.get(token=job_token, id=job_id)
+        response = civitai.jobs.get(token=job_token, id=job_id)
         print("Job Status Response by Token:", response)
         self.assertIsNotNone(
             response, "The response should not be None when both token and ID are provided.")

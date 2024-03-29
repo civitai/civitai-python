@@ -269,11 +269,6 @@ class ApiClient:
         """
 
         try:
-            self.logger.debug(f"Request Method: {method}")
-            self.logger.debug(f"Request URL: {url}")
-            self.logger.debug(f"Request Headers: {header_params}")
-            self.logger.debug(f"Request Body: {body}")
-
             # perform request and return response
             response_data = self.rest_client.request(
                 method, url,
@@ -281,12 +276,6 @@ class ApiClient:
                 body=body, post_params=post_params,
                 _request_timeout=_request_timeout
             )
-
-            # Add logging statement for the response
-            self.logger.debug(f"Response Status Code: {response_data.status}")
-            self.logger.debug(f"Response Headers: {response_data.getheaders()}")
-            self.logger.debug(f"Response Body: {response_data.data}")
-
         except ApiException as e:
             self.logger.error(f"Exception when calling API: {e}")
             raise e

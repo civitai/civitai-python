@@ -133,6 +133,7 @@ from .schemas import FromTextSchema
 
 import time
 import json
+import asyncio
 
 
 class Civitai:
@@ -290,18 +291,8 @@ class Civitai:
                 print(f"Failed to submit job: {e}")
                 return None
 
-            if response is None:
-                print("No response received from the API.")
-                return None
-
             if isinstance(response, JobStatusCollection):
-                if wait:
-                    print("Waiting for job completion...", flush=True)  # Flush the output buffer
-                    # If waiting for job completion, poll until job is done or timeout
-                    job_result = self._poll_for_job_completion(response.token)
-                    if job_result and response.jobs:
-                        response.jobs[0].result = job_result
-
+                if response:
                     # Return the modified response
                     modified_response = {
                         "token": response.token,
@@ -313,57 +304,26 @@ class Civitai:
                         } for job in response.jobs]
                     }
                     return modified_response
-                else:
-                    # If not waiting for job completion, return the token or timeout
-                    return self._get_job_token(response.token)
-
-            # Return the job token
-            return self._get_job_token(response.token)
 
         # Helper methods
-        def _get_job_token(self, token, timeout=10):
-            """
-            Retrieves the job token or raises a TimeoutError if the token is not available within the specified timeout.
+        # def _poll_for_job_completion(self, token, interval=30, timeout=300):
+        #     """
+        #     Polls the job status until completion or timeout.
 
-            :param token: The token to retrieve.
-            :param timeout: The maximum time (in seconds) to wait for the token.
-            :return: The job token as a dictionary.
-            """
-            start_time = time.time()
-            while time.time() - start_time < timeout:
-                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
-                if response and response.token:
-                    modified_response = {
-                        "token": response.token,
-                        "jobs": [{
-                            "jobId": job.job_id,
-                            "cost": job.cost,
-                            "result": job.result,
-                            "scheduled": job.scheduled,
-                        } for job in response.jobs]
-                    }
-                    return modified_response
-                time.sleep(1)
-            raise TimeoutError(f"Job token not available within {timeout} seconds.")
-
-        def _poll_for_job_completion(self, token, interval=30, timeout=300):
-            """
-            Polls the job status until completion or timeout.
-
-            :param token: The token of the job to poll.
-            :param interval: The interval (in seconds) between status checks.
-            :param timeout: The maximum time (in seconds) to wait for job completion.
-            :return: The result of the job if completed, None otherwise.
-            """
-            start_time = time.time()
-            while time.time() - start_time < timeout:
-                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
-                if response and response.jobs:
-                    job = response.jobs[0]
-                    if job.result and job.result.get("blobUrl"):
-                        return job.result
-                time.sleep(interval)
-            raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
+        #     :param token: The token of the job to poll.
+        #     :param interval: The interval (in seconds) between status checks.
+        #     :param timeout: The maximum time (in seconds) to wait for job completion.
+        #     :return: The result of the job if completed, None otherwise.
+        #     """
+        #     start_time = time.time()
+        #     while time.time() - start_time < timeout:
+        #         response = self.civitai_py.jobs.get(token=token)
+        #         if response and response.jobs:
+        #             job = response.jobs[0]
+        #             if job.result and job.result.get("blobUrl"):
+        #                 return job.result
+        #         time.sleep(interval)
+        #     raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
 
 
 # Create an instance of Civitai and assign it to the variable 'civitai_py'
