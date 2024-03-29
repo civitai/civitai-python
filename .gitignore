@@ -70,3 +70,5 @@ target/
 .env.test
 
 .openapi-generator/
+
+.pypirc
