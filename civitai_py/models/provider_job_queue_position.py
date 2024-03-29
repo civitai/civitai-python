@@ -37,7 +37,7 @@ class ProviderJobQueuePosition(BaseModel):
         default=None, description="The estimated throughput rate of the queue", alias="throughputRate")
     worker_id: Optional[StrictStr] = Field(
         default=None, description="The id of the worker that this job is queued with", alias="workerId")
-    estimated_start_duration: Optional[TimeSpan] = Field(
+    estimated_start_duration: Optional[Any] = Field(
         default=None, alias="estimatedStartDuration")
     estimated_start_date: Optional[datetime] = Field(
         default=None, description="The date before the job is estimated to be started. Null if we do not have an estimate yet", alias="estimatedStartDate")
@@ -113,7 +113,7 @@ class ProviderJobQueuePosition(BaseModel):
             "precedingCost": obj.get("precedingCost"),
             "throughputRate": obj.get("throughputRate"),
             "workerId": obj.get("workerId"),
-            "estimatedStartDuration": TimeSpan.from_dict(obj["estimatedStartDuration"]) if obj.get("estimatedStartDuration") is not None else None,
+            "estimatedStartDuration": obj.get("estimatedStartDuration"),
             "estimatedStartDate": obj.get("estimatedStartDate")
         })
         return _obj

@@ -1,4 +1,4 @@
-# time_span.py
+# coding: utf-8
 
 """
     Civitai Orchestration Consumer API
@@ -119,26 +119,13 @@ class TimeSpan(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Optional[Union[Dict[str, Any], str]]) -> Optional[Self]:
-        """Create an instance of TimeSpan from a dict or a string"""
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
+        """Create an instance of TimeSpan from a dict"""
         if obj is None:
             return None
 
-        if isinstance(obj, str):
-            # Parse the string representation of TimeSpan
-            time_parts = obj.split(':')
-            if len(time_parts) == 3:
-                hours, minutes, seconds = map(int, time_parts)
-                obj = {
-                    'hours': hours,
-                    'minutes': minutes,
-                    'seconds': seconds
-                }
-            else:
-                raise ValueError(f"Invalid TimeSpan string format: {obj}")
-
         if not isinstance(obj, dict):
-            raise ValueError(f"Invalid input type for TimeSpan: {type(obj)}")
+            return cls.model_validate(obj)
 
         _obj = cls.model_validate({
             "ticks": obj.get("ticks"),

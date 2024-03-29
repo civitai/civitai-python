@@ -248,7 +248,7 @@ class Civitai:
         def __init__(self, civitai_py):
             self.civitai_py = civitai_py
 
-        def create(self, input, wait=False):
+        def create(self, input, timeout=None):
             """
             Submits a new image generation job and optionally waits for its completion.
 
@@ -285,6 +285,7 @@ class Civitai:
                 response = self.civitai_py.jobs_api.v1_consumer_jobs_post(
                     wait=True,
                     detailed=False,
+                    _request_timeout=timeout,
                     job_template_list=job_input
                 )
             except ApiException as e:
@@ -304,26 +305,6 @@ class Civitai:
                         } for job in response.jobs]
                     }
                     return modified_response
-
-        # Helper methods
-        # def _poll_for_job_completion(self, token, interval=30, timeout=300):
-        #     """
-        #     Polls the job status until completion or timeout.
-
-        #     :param token: The token of the job to poll.
-        #     :param interval: The interval (in seconds) between status checks.
-        #     :param timeout: The maximum time (in seconds) to wait for job completion.
-        #     :return: The result of the job if completed, None otherwise.
-        #     """
-        #     start_time = time.time()
-        #     while time.time() - start_time < timeout:
-        #         response = self.civitai_py.jobs.get(token=token)
-        #         if response and response.jobs:
-        #             job = response.jobs[0]
-        #             if job.result and job.result.get("blobUrl"):
-        #                 return job.result
-        #         time.sleep(interval)
-        #     raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
 
 
 # Create an instance of Civitai and assign it to the variable 'civitai_py'

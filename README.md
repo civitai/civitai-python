@@ -63,10 +63,8 @@ input = {
 Run a model:
 
 ```python
-response = civitai.image.create(input)
+response = civitai.image.create(input, timeout=60) # Timeout is optional and is None by default
 ```
-
-_Note: Jobs timeout after 5 minutes._
 
 ### Using Additional Networks
 
@@ -111,6 +109,7 @@ response = civitai.image.create(options)
 
 | name                    | type                                                                            | description                                                                                                                                                                                                                                                                                                                               |
 | ----------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `timeout`               | number \| null                                                                  | Optional. The maximum time in seconds to poll for the image generation. `None` by default.                                                                                                                                                                                                                            |
 | `model`                 | string \| null                                                                  | **Required**. The Civitai model to use for generation.                                                                                                                                                                                                                                                                                    |
 | `params.prompt`         | string \| null                                                                  | **Required**. The main prompt for the image generation.                                                                                                                                                                                                                                                                                   |
 | `params.negativePrompt` | string \| null                                                                  | Optional. The negative prompt for the image generation.                                                                                                                                                                                                                                                                                   |

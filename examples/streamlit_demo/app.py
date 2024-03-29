@@ -4,16 +4,15 @@ import civitai_py as civitai
 st.set_page_config(layout="wide")
 
 
-def generate_image(input_data, wait_for_completion):
+def generate_image(input_data):
     """
     Generate an image using the Civitai SDK.
 
     :param input_data: The input parameters for the image generation.
-    :param wait_for_completion: Whether to wait for the job to complete before returning the result.
-    :return: The job result if wait_for_completion is True, otherwise the job token.
+    :return: The job result
     """
     try:
-        output = civitai.image.create(input_data, wait=wait_for_completion)
+        output = civitai.image.create(input_data)
         return output
     except Exception as e:
         st.error(f"Failed to generate image: {str(e)}")
@@ -37,7 +36,6 @@ with col_input:
         width = st.number_input("Width", min_value=1, max_value=1024, value=768)
         height = st.number_input("Height", min_value=1, max_value=1024, value=512)
         seed = st.number_input("Seed", value=-1)
-        wait_for_completion = st.checkbox("Wait for completion", value=True)
         submit_button = st.form_submit_button("Generate Image")
 
 if submit_button:
@@ -55,9 +53,9 @@ if submit_button:
         },
     }
 
-    result = generate_image(input_data, wait_for_completion)
+    result = generate_image(input_data)
 
-    if result and wait_for_completion:
+    if result:
         if 'jobs' in result and result['jobs'][0].get('result'):
             with col_image:
                 st.image(result['jobs'][0]['result']['blobUrl'],
@@ -65,6 +63,3 @@ if submit_button:
         else:
             with col_image:
                 st.error("Failed to retrieve the generated image.")
-    elif result and not wait_for_completion:
-        with col_image:
-            st.success(f"Job submitted. Token: {result.get('token')}")

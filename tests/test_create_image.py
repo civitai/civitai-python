@@ -20,15 +20,7 @@ class TestCreateImage(unittest.TestCase):
             },
         }
 
-        # Test case when wait=False
-        # output = civitai.image.create(input, wait=False)
-        # print("Response (wait=False):", output)
-
-        # self.assertIsNotNone(output, "The output should not be None.")
-        # self.assertIn("token", output, "The output should contain a 'token' key.")
-
-        # Test case when wait=True
-        output = civitai.image.create(input, wait=True)
+        output = civitai.image.create(input, timeout=2)
         print("Response (wait=True):", output)
 
         self.assertIsNotNone(output, "The output should not be None.")
