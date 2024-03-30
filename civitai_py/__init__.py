@@ -6,9 +6,6 @@
     Civitai Orchestration Consumer API
 """  # noqa: E501
 
-
-__version__ = "1.0.0"
-
 import os
 
 # import apis into sdk package
@@ -133,7 +130,6 @@ from .schemas import FromTextSchema
 
 import time
 import json
-import asyncio
 
 
 class Civitai:
@@ -248,7 +244,7 @@ class Civitai:
         def __init__(self, civitai_py):
             self.civitai_py = civitai_py
 
-        def create(self, input, timeout=None):
+        def create(self, input, wait=False):
             """
             Submits a new image generation job and optionally waits for its completion.
 
@@ -285,16 +281,46 @@ class Civitai:
                 response = self.civitai_py.jobs_api.v1_consumer_jobs_post(
                     wait=True,
                     detailed=False,
-                    _request_timeout=timeout,
                     job_template_list=job_input
                 )
             except ApiException as e:
                 print(f"Failed to submit job: {e}")
                 return None
 
-            if isinstance(response, JobStatusCollection):
-                if response:
-                    # Return the modified response
+            if response is None:
+                print("No response received from the API.")
+                return None
+
+            # Poll until job is done
+            job_result = self._poll_for_job_completion(response.token)
+            if job_result and response.jobs:
+                response.jobs[0].result = job_result
+
+            # Return the modified response
+            modified_response = {
+                "token": response.token,
+                "jobs": [{
+                    "jobId": job.job_id,
+                    "cost": job.cost,
+                    "result": job.result,
+                    "scheduled": job.scheduled,
+                } for job in response.jobs]
+            }
+            return modified_response
+
+        # Helper methods
+        def _get_job_token(self, token, timeout=10):
+            """
+            Retrieves the job token or raises a TimeoutError if the token is not available within the specified timeout.
+
+            :param token: The token to retrieve.
+            :param timeout: The maximum time (in seconds) to wait for the token.
+            :return: The job token as a dictionary.
+            """
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
+                if response and response.token:
                     modified_response = {
                         "token": response.token,
                         "jobs": [{
@@ -305,6 +331,27 @@ class Civitai:
                         } for job in response.jobs]
                     }
                     return modified_response
+                time.sleep(1)
+            raise TimeoutError(f"Job token not available within {timeout} seconds.")
+
+        def _poll_for_job_completion(self, token, interval=30, timeout=300):
+            """
+            Polls the job status until completion or timeout.
+
+            :param token: The token of the job to poll.
+            :param interval: The interval (in seconds) between status checks.
+            :param timeout: The maximum time (in seconds) to wait for job completion.
+            :return: The result of the job if completed, None otherwise.
+            """
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
+                if response and response.jobs:
+                    job = response.jobs[0]
+                    if job.result and job.result.get("blobUrl"):
+                        return job.result
+                time.sleep(interval)
+            raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
 
 
 # Create an instance of Civitai and assign it to the variable 'civitai_py'

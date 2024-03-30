@@ -20,7 +20,7 @@ class TestCreateImage(unittest.TestCase):
             },
         }
 
-        output = civitai.image.create(input, timeout=2)
+        output = civitai.image.create(input)
         print("Response (wait=True):", output)
 
         self.assertIsNotNone(output, "The output should not be None.")
