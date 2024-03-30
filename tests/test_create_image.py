@@ -1,6 +1,6 @@
 # test/test_create_image.py
 import unittest
-import civitai_py as civitai
+import civitai
 
 
 class TestCreateImage(unittest.TestCase):

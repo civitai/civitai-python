@@ -39,7 +39,7 @@ export CIVITAI_API_TOKEN=<your token>
 #### Import the Civitai SDK:
 
 ```python
-import civitai_py as civitai
+import civitai
 ```
 
 #### Create a txt2img job:

@@ -1,5 +1,5 @@
 import streamlit as st
-import civitai_py as civitai
+import civitai as civitai
 
 st.set_page_config(layout="wide")
 

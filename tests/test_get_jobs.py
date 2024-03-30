@@ -1,6 +1,6 @@
 # tests/test_civitai_py.py
 import unittest
-import civitai_py as civitai
+import civitai
 
 
 class TestGetJobStatus(unittest.TestCase):
