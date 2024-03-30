@@ -72,3 +72,5 @@ target/
 .openapi-generator/
 
 .pypirc
+
+.DS_Store

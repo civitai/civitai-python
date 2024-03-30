@@ -12,7 +12,7 @@ To get started with the Civitai Generator Python Client, you can use the followi
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-- **Streamlit Demo**: See the Civitai SDK in action with a live Streamlit app demo. [View Streamlit Demo](https://share.streamlit.io/path_to_your_streamlit_app)
+- **Streamlit Demo**: See the Civitai SDK in action with a live Streamlit app demo. [View Streamlit Demo](https://civitai.streamlit.app/)
 
 ## Installation
 

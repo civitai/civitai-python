@@ -114,8 +114,7 @@ class JobTemplateListJobsInner(BaseModel):
             match += 1
         # validate data type: ImageResourceTrainingJobRequest
         if not isinstance(v, ImageResourceTrainingJobRequest):
-            error_messages.append(f"Error! Input type `{type(
-                v)}` is not `ImageResourceTrainingJobRequest`")
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ImageResourceTrainingJobRequest`")
         else:
             match += 1
         # validate data type: UploadBlobRequest
@@ -145,8 +144,7 @@ class JobTemplateListJobsInner(BaseModel):
             match += 1
         # validate data type: ImageTransformJobRequest
         if not isinstance(v, ImageTransformJobRequest):
-            error_messages.append(f"Error! Input type `{
-                                  type(v)}` is not `ImageTransformJobRequest`")
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ImageTransformJobRequest`")
         else:
             match += 1
         # validate data type: CopyAssetRequest
@@ -181,8 +179,7 @@ class JobTemplateListJobsInner(BaseModel):
             match += 1
         # validate data type: ImageEmbeddingJobRequest
         if not isinstance(v, ImageEmbeddingJobRequest):
-            error_messages.append(f"Error! Input type `{
-                                  type(v)}` is not `ImageEmbeddingJobRequest`")
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ImageEmbeddingJobRequest`")
         else:
             match += 1
         # validate data type: RebootWorkerJobRequest

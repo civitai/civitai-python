@@ -135,6 +135,10 @@ import json
 class Civitai:
     def __init__(self, api_token=None):
         self.api_token = api_token or os.getenv('CIVITAI_API_TOKEN', '')
+        if not self.api_token:
+            raise ValueError(
+                "API token not provided. Please set the 'CIVITAI_API_TOKEN' environment variable or pass the token directly.")
+
         config = Configuration(host="https://orchestration.civitai.com")
         api_client = ApiClient(configuration=config)
         api_client.default_headers['Authorization'] = f"Bearer {self.api_token}"
