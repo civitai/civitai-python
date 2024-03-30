@@ -1,2 +1,2 @@
 streamlit
-civitai_py
+civitai-py

@@ -154,8 +154,8 @@ class Civitai:
         return self.Image(self)
 
     class Jobs:
-        def __init__(self, civitai_py):
-            self.civitai_py = civitai_py
+        def __init__(self, civitai):
+            self.civitai = civitai
 
         def get(self, token=None, id=None):
             """
@@ -174,10 +174,10 @@ class Civitai:
             """
             response = None
             if token:
-                full_response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
+                full_response = self.civitai.jobs_api.v1_consumer_jobs_get(token=token)
                 response = self._filter_response(full_response)
             elif id:
-                full_response = self.civitai_py.jobs_api.v1_consumer_jobs_job_id_get(job_id=id)
+                full_response = self.civitai.jobs_api.v1_consumer_jobs_job_id_get(job_id=id)
                 response = self._filter_response(full_response)
             else:
                 raise ValueError("Either 'token' or 'id' must be provided.")
@@ -211,7 +211,7 @@ class Civitai:
             :return: A filtered response based on the query.
             """
             # Call the API method with the provided parameters.
-            response = self.civitai_py.jobs_api.v1_consumer_jobs_query_post(
+            response = self.civitai.jobs_api.v1_consumer_jobs_query_post(
                 detailed=detailed,
                 query_jobs_request=query_jobs_request
             )
@@ -228,7 +228,7 @@ class Civitai:
             :return: None
             """
             try:
-                self.civitai_py.jobs_api.v1_consumer_jobs_job_id_delete(job_id=job_id, force=force)
+                self.civitai.jobs_api.v1_consumer_jobs_job_id_delete(job_id=job_id, force=force)
                 print(f"Job {job_id} cancelled successfully.")
             except ApiException as e:
                 print(f"Failed to cancel job {job_id}. Error: {e}")
@@ -238,15 +238,15 @@ class Civitai:
     #     return self.Models(self)
 
     # class Models:
-    #     def __init__(self, civitai_py):
-    #         self.civitai_py = civitai_py
+    #     def __init__(self, civitai):
+    #         self.civitai = civitai
 
     #     def get(self, model):
-    #         return self.civitai_py.coverage_api.v1_consumer_coverage_get(model=model)
+    #         return self.civitai.coverage_api.v1_consumer_coverage_get(model=model)
 
     class Image:
-        def __init__(self, civitai_py):
-            self.civitai_py = civitai_py
+        def __init__(self, civitai):
+            self.civitai = civitai
 
         def create(self, input, wait=False):
             """
@@ -282,7 +282,7 @@ class Civitai:
 
             try:
                 # Submit job and process response
-                response = self.civitai_py.jobs_api.v1_consumer_jobs_post(
+                response = self.civitai.jobs_api.v1_consumer_jobs_post(
                     wait=True,
                     detailed=False,
                     job_template_list=job_input
@@ -323,7 +323,7 @@ class Civitai:
             """
             start_time = time.time()
             while time.time() - start_time < timeout:
-                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
+                response = self.civitai.jobs_api.v1_consumer_jobs_get(token=token)
                 if response and response.token:
                     modified_response = {
                         "token": response.token,
@@ -349,7 +349,7 @@ class Civitai:
             """
             start_time = time.time()
             while time.time() - start_time < timeout:
-                response = self.civitai_py.jobs_api.v1_consumer_jobs_get(token=token)
+                response = self.civitai.jobs_api.v1_consumer_jobs_get(token=token)
                 if response and response.jobs:
                     job = response.jobs[0]
                     if job.result and job.result.get("blobUrl"):
@@ -358,10 +358,10 @@ class Civitai:
             raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
 
 
-# Create an instance of Civitai and assign it to the variable 'civitai_py'
-civitai_py = Civitai()
+# Create an instance of Civitai and assign it to the variable 'civitai'
+civitai = Civitai()
 
-# Expose the 'jobs', 'models', and 'image' attributes of the 'civitai_py' instance at the module level
-jobs = civitai_py.jobs
-image = civitai_py.image
-# models = civitai_py.models
+# Expose the 'jobs', 'models', and 'image' attributes of the 'civitai' instance at the module level
+jobs = civitai.jobs
+image = civitai.image
+# models = civitai.models
