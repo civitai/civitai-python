@@ -16,6 +16,8 @@ from civitai_py.models.prepare_model_job import PrepareModelJob
 from civitai_py.models.reboot_worker_job import RebootWorkerJob
 from civitai_py.models.text_to_image_job import TextToImageJob
 from civitai_py.models.wd_tagging_job import WDTaggingJob
+from civitai_py.models.job_event import JobEvent
+from civitai_py.models.provider_job_status import ProviderJobStatus
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
@@ -90,10 +92,9 @@ class JobStatusJob(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `PingJob`")
         else:
             match += 1
-       # validate data type: ImageResourceTrainingJob
+        # validate data type: ImageResourceTrainingJob
         if not isinstance(v, ImageResourceTrainingJob):
-            error_messages.append(f"Error! Input type `{type(
-                v).__name__}` is not `ImageResourceTrainingJob`")
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ImageResourceTrainingJob`")
         else:
             match += 1
         # validate data type: ImageTransformJob
