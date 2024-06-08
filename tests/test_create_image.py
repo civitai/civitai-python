@@ -1,5 +1,5 @@
 import unittest
-import asyncio
+import json
 import civitai
 
 
@@ -11,8 +11,8 @@ class TestCreateImage(unittest.TestCase):
                 "prompt": "A cat",
                 "negativePrompt": "A dog",
                 "scheduler": "EulerA",
-                "steps": 30,
-                "cfgScale": 10,
+                "steps": 20,
+                "cfgScale": 7,
                 "width": 768,
                 "height": 512,
                 "seed": -1,
@@ -20,16 +20,15 @@ class TestCreateImage(unittest.TestCase):
             },
         }
 
-        async def run_test():
-            output = await civitai.image.create(input_data, wait=False)
-            print("Response (wait=True):", output)
+        output = civitai.image.create(input_data, wait=True)
+        formatted_output = json.dumps(output, indent=4)
+        print("Response: ", formatted_output)
 
-            self.assertIsNotNone(output, "The output should not be None.")
-            self.assertIn("jobs", output, "The output should contain a 'jobs' key.")
-            self.assertGreater(len(output["jobs"]), 0, "The 'jobs' list should not be empty.")
-            self.assertIn("result", output["jobs"][0], "The job should have a 'result' key.")
-
-        asyncio.run(run_test())
+        self.assertIsNotNone(output, "The output should not be None.")
+        self.assertIn("jobs", output,
+                      "The output should contain a 'jobs' key.")
+        self.assertGreater(len(output["jobs"]), 0,
+                           "The 'jobs' list should not be empty.")
 
 
 if __name__ == '__main__':

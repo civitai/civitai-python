@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, Extra
 from typing import Optional, List, Dict, Any
 
 
@@ -20,11 +20,11 @@ class ControlNetSchema(BaseModel):
 class FromTextSchema(BaseModel):
     model: str
     params: Dict[str, Any] = Field(..., example={"prompt": "A clear day"})
-    # additionalNetworks: Optional[Dict[str, Any]]
-    # controlNets: Optional[List[ControlNetSchema]]
-    # callbackUrl: Optional[str]
+    additionalNetworks: Optional[Dict[str, Any]] = None
+    controlNets: Optional[List[ControlNetSchema]] = None
+    callbackUrl: Optional[str] = None
     quantity: Optional[int] = 1
-    # properties: Optional[Dict[str, Any]]
+    properties: Optional[Dict[str, Any]] = None
 
     @validator('params')
     def params_validator(cls, v):
@@ -33,3 +33,7 @@ class FromTextSchema(BaseModel):
         if 'height' in v and not (1 <= v['height'] <= 1024):
             raise ValueError("Height must be between 1 and 1024")
         return v
+
+    class Config:
+        # prevent any extra fields not defined in the schema (acts in .strict() in zod)
+        extra = Extra.forbid

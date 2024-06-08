@@ -39,35 +39,38 @@ class Civitai:
         def __init__(self, civitai):
             self.civitai = civitai
 
-        async def create(self, input, wait=False):
-            try:
-                validated_input = FromTextSchema(**input)
-            except ValueError as e:
-                raise ValueError(f"Validation error: {str(e)}")
+        def create(self, input, wait=False):
+            async def async_create():
+                try:
+                    validated_input = FromTextSchema(**input)
+                except ValueError as e:
+                    raise ValueError(f"Validation error: {str(e)}")
 
-            base_model = "SDXL" if "sdxl" in validated_input.model else "SD_1_5"
-            job_input = {"$type": "textToImage",
-                         "baseModel": base_model, **validated_input.dict()}
+                base_model = "SDXL" if "sdxl" in validated_input.model else "SD_1_5"
+                job_input = {"$type": "textToImage",
+                             "baseModel": base_model, **validated_input.dict(exclude_unset=True)}
 
-            response = await post_v1consumerjobs(job_input, wait=wait, api_config_override=self.civitai)
-            modified_response = {
-                "token": response.token,
-                "jobs": [{
-                    "jobId": job.jobId,
-                    "cost": job.cost,
-                    "result": job.result,
-                    "scheduled": job.scheduled,
-                } for job in response.jobs]
-            }
+                response = await post_v1consumerjobs(job_input, wait=False, api_config_override=self.civitai)
+                modified_response = {
+                    "token": response.token,
+                    "jobs": [{
+                        "jobId": job.jobId,
+                        "cost": job.cost,
+                        "result": job.result,
+                        "scheduled": job.scheduled,
+                    } for job in response.jobs]
+                }
 
-            if wait:
-                job_result = await self._poll_for_job_completion(response.token)
-                if job_result and modified_response["jobs"]:
-                    modified_response["jobs"][0]["result"] = job_result
+                if wait:
+                    job_result = await self._poll_for_job_completion(response.token)
+                    if job_result and modified_response["jobs"]:
+                        modified_response["jobs"][0]["result"] = job_result
 
-            return modified_response
+                return modified_response
 
-        async def _poll_for_job_completion(self, token, interval=30, timeout=300):
+            return asyncio.run(async_create())
+
+        async def _poll_for_job_completion(self, token, interval=1, timeout=300):
             start_time = time.time()
             while time.time() - start_time < timeout:
                 response = await get_v1consumerjobs(token, api_config_override=self.civitai)
@@ -76,42 +79,55 @@ class Civitai:
                     if job.result and job.result.get("blobUrl"):
                         return job.result
                 await asyncio.sleep(interval)
-            raise TimeoutError(f"Job {token} did not complete within {timeout} seconds.")
+            raise TimeoutError(f"Job {token} did not complete within {
+                               timeout} seconds.")
 
     class Jobs:
         def __init__(self, civitai):
             self.civitai = civitai
 
-        async def get_by_token(self, token):
-            response = await get_v1consumerjobs(token, api_config_override=self.civitai)
-            modified_response = {
-                "token": response.token,
-                "jobs": [{
-                    "jobId": job.jobId,
-                    "cost": job.cost,
-                    "result": job.result,
-                    "scheduled": job.scheduled,
-                } for job in response.jobs]
-            }
-            return modified_response
+        def get(self, token=None, job_id=None):
+            async def async_get():
+                if token:
+                    response = await get_v1consumerjobs(token, api_config_override=self.civitai)
+                    modified_response = {
+                        "token": response.token,
+                        "jobs": [{
+                            "jobId": job.jobId,
+                            "cost": job.cost,
+                            "result": job.result,
+                            "scheduled": job.scheduled,
+                        } for job in response.jobs]
+                    }
+                elif job_id:
+                    response = await get_v1consumerjobsjobId(job_id, api_config_override=self.civitai)
+                    modified_response = {
+                        "jobId": response.jobId,
+                        "cost": response.cost,
+                        "result": response.result,
+                        "scheduled": response.scheduled,
+                    }
+                else:
+                    raise ValueError(
+                        "Either token or job_id must be provided.")
 
-        async def get_by_id(self, job_id):
-            response = await get_v1consumerjobsjobId(job_id, api_config_override=self.civitai)
-            modified_response = {
-                "jobId": response.jobId,
-                "cost": response.cost,
-                "result": response.result,
-                "scheduled": response.scheduled,
-            }
-            return modified_response
+                return modified_response
 
-        async def get_by_query(self, query, detailed=False):
-            response = await post_v1consumerjobsquery(query, detailed=detailed, api_config_override=self.civitai)
-            return response
+            return asyncio.run(async_get())
 
-        async def cancel(self, job_id):
-            response = await delete_v1consumerjobsjobId(job_id, api_config_override=self.civitai)
-            return response
+        def query(self, query, detailed=False):
+            async def async_query():
+                response = await post_v1consumerjobsquery(query, detailed=detailed, api_config_override=self.civitai)
+                return response
+
+            return asyncio.run(async_query())
+
+        def cancel(self, job_id):
+            async def async_cancel():
+                response = await delete_v1consumerjobsjobId(job_id, api_config_override=self.civitai)
+                return response
+
+            return asyncio.run(async_cancel())
 
 
 # Expose the 'Civitai' class at the module level

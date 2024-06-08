@@ -1,4 +1,3 @@
-# test/test_query_jobs.py
 import unittest
 import civitai
 
@@ -8,16 +7,10 @@ class TestJobQuery(unittest.TestCase):
         query = {
             "properties": {
                 "userId": 4,
-                "modelId": 359773,
             },
         }
 
-        # Perform the query.
-        response = civitai.jobs.query(
-            detailed=True,
-            query_jobs_request=query
-        )
-
+        response = civitai.jobs.query(query=query, detailed=True)
         print("Response", response)
         self.assertIsNotNone(response, "The response should not be None.")
 

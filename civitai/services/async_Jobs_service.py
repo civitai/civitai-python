@@ -7,10 +7,6 @@ import httpx
 from ..api_config import APIConfig, HTTPException
 from ..models import *
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 
 async def get_v1consumerjobs(
     token: str,
@@ -27,9 +23,11 @@ async def get_v1consumerjobs(
         "Accept": "application/json",
         "Authorization": f"Bearer {api_config.get_access_token()}",
     }
-    query_params: Dict[str, Any] = {"token": token, "wait": wait, "detailed": detailed}
+    query_params: Dict[str, Any] = {
+        "token": token, "wait": wait, "detailed": detailed}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request(
@@ -39,7 +37,7 @@ async def get_v1consumerjobs(
             params=query_params,
         )
 
-    if response.status_code != 200:
+    if response.status_code not in [200, 202]:
         raise HTTPException(response.status_code, f"Request to {
                             path} failed with status code: {response.status_code}")
 
@@ -66,28 +64,15 @@ async def post_v1consumerjobs(
     query_params: Dict[str, Any] = {"wait": wait,
                                     "detailed": detailed, "whatif": whatif, "charge": charge}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
-
-    # Log request details
-    logger.debug(f"POST {path}")
-    logger.debug(f"Headers: {headers}")
-    logger.debug(f"Query Params: {query_params}")
-    logger.debug(f"Data: {json.dumps(data, indent=2)}")
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=True) as client:
         response = await client.request("post", httpx.URL(path), headers=headers, params=query_params, json=data if isinstance(data, dict) else data.dict())
 
-    # Log response details
-    logger.debug(f"Response Status Code: {response.status_code}")
-    logger.debug(f"Response Content: {response.text}")
-
-    if response.status_code != 200:
-        error_message = f"Request failed with status code: {response.status_code}"
-        if response.text:
-            error_message += f", Response: {response.text}"
-        else:
-            error_message += ", Response content is empty."
-        raise HTTPException(response.status_code, error_message)
+    if response.status_code not in [200, 202]:
+        raise HTTPException(response.status_code, f"Request failed with status code: {
+                            response.status_code}")
 
     return JobStatusCollection(**response.json()) if response.json() is not None else JobStatusCollection()
 
@@ -106,7 +91,8 @@ async def put_v1consumerjobs(
     }
     query_params: Dict[str, Any] = {"token": token}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request("put", httpx.URL(path), headers=headers, params=query_params, json=data.dict())
@@ -132,7 +118,8 @@ async def delete_v1consumerjobs(
     }
     query_params: Dict[str, Any] = {"token": token, "force": force}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request(
@@ -163,7 +150,8 @@ async def get_v1consumerjobsjobId(
     }
     query_params: Dict[str, Any] = {"detailed": detailed}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request(
@@ -194,7 +182,8 @@ async def put_v1consumerjobsjobId(
     }
     query_params: Dict[str, Any] = {}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request("put", httpx.URL(path), headers=headers, params=query_params, json=data.dict())
@@ -220,7 +209,8 @@ async def delete_v1consumerjobsjobId(
     }
     query_params: Dict[str, Any] = {"force": force}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
         response = await client.request(
@@ -251,10 +241,11 @@ async def post_v1consumerjobsquery(
     }
     query_params: Dict[str, Any] = {"detailed": detailed}
 
-    query_params = {key: value for (key, value) in query_params.items() if value is not None}
+    query_params = {key: value for (
+        key, value) in query_params.items() if value is not None}
 
     async with httpx.AsyncClient(base_url=base_path, verify=api_config.verify) as client:
-        response = await client.request("post", httpx.URL(path), headers=headers, params=query_params, json=data.dict())
+        response = await client.request("post", httpx.URL(path), headers=headers, params=query_params, json=data)
 
     if response.status_code != 200:
         raise HTTPException(response.status_code, f" failed with status code: {
