@@ -86,7 +86,7 @@ input = {
         "seed": -1,
         "clipSkip": 2
     },
-    "additional_networks": {
+    "additionalNetworks": {
         "urn:air:sd1:lora:civitai:162141@182559": {
             "type": "Lora",
             "strength": 1.0
