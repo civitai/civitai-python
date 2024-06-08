@@ -1,0 +1,31 @@
+from enum import Enum
+
+
+class TypeAttributes(str, Enum):
+
+    NOTPUBLIC = "NotPublic"
+    PUBLIC = "Public"
+    NESTEDPUBLIC = "NestedPublic"
+    NESTEDPRIVATE = "NestedPrivate"
+    NESTEDFAMILY = "NestedFamily"
+    NESTEDASSEMBLY = "NestedAssembly"
+    NESTEDFAMANDASSEM = "NestedFamANDAssem"
+    VISIBILITYMASK = "VisibilityMask"
+    SEQUENTIALLAYOUT = "SequentialLayout"
+    EXPLICITLAYOUT = "ExplicitLayout"
+    LAYOUTMASK = "LayoutMask"
+    INTERFACE = "Interface"
+    ABSTRACT = "Abstract"
+    SEALED = "Sealed"
+    SPECIALNAME = "SpecialName"
+    RTSPECIALNAME = "RTSpecialName"
+    IMPORT = "Import"
+    SERIALIZABLE = "Serializable"
+    WINDOWSRUNTIME = "WindowsRuntime"
+    UNICODECLASS = "UnicodeClass"
+    AUTOCLASS = "AutoClass"
+    STRINGFORMATMASK = "StringFormatMask"
+    HASSECURITY = "HasSecurity"
+    RESERVEDMASK = "ReservedMask"
+    BEFOREFIELDINIT = "BeforeFieldInit"
+    CUSTOMFORMATMASK = "CustomFormatMask"

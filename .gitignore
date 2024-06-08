@@ -69,8 +69,12 @@ target/
 .env
 .env.test
 
-.openapi-generator/
 
 .pypirc
 
 .DS_Store
+
+# OpenAPI Generator
+.openapi-generator/
+swagger.json
+

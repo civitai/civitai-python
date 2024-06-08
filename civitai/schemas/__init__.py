@@ -20,11 +20,11 @@ class ControlNetSchema(BaseModel):
 class FromTextSchema(BaseModel):
     model: str
     params: Dict[str, Any] = Field(..., example={"prompt": "A clear day"})
-    additionalNetworks: Optional[Dict[str, Any]]
-    controlNets: Optional[List[ControlNetSchema]]
-    callbackUrl: Optional[str]
+    # additionalNetworks: Optional[Dict[str, Any]]
+    # controlNets: Optional[List[ControlNetSchema]]
+    # callbackUrl: Optional[str]
     quantity: Optional[int] = 1
-    properties: Optional[Dict[str, Any]]
+    # properties: Optional[Dict[str, Any]]
 
     @validator('params')
     def params_validator(cls, v):
