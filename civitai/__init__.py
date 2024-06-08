@@ -48,7 +48,7 @@ class Civitai:
 
                 base_model = "SDXL" if "sdxl" in validated_input.model else "SD_1_5"
                 job_input = {"$type": "textToImage",
-                             "baseModel": base_model, **validated_input.dict(exclude_unset=True)}
+                             "baseModel": base_model, **validated_input.model_dump(exclude_unset=True)}
 
                 response = await post_v1consumerjobs(job_input, wait=False, api_config_override=self.civitai)
                 modified_response = {
@@ -62,13 +62,20 @@ class Civitai:
                 }
 
                 if wait:
-                    job_result = await self._poll_for_job_completion(response.token)
-                    if job_result and modified_response["jobs"]:
-                        modified_response["jobs"][0]["result"] = job_result
+                    response = await self._poll_for_job_completion(response.token)
+                    return response
 
                 return modified_response
 
-            return asyncio.run(async_create())
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                return asyncio.ensure_future(async_create())
+            else:
+                return asyncio.run(async_create())
 
         async def _poll_for_job_completion(self, token, interval=1, timeout=300):
             start_time = time.time()
@@ -78,14 +85,25 @@ class Civitai:
                 if response and response.jobs:
                     last_response = response
                     logging.info(f"Job status: {last_response}")
-                    job = response.jobs[0]
-                    if job.result and job.result.get("blobUrl"):
-                        return job.result
+                    completed_jobs = []
+                    for job in response.jobs:
+                        if job.result and job.result.get("blobUrl"):
+                            completed_jobs.append({
+                                "jobId": job.jobId,
+                                "cost": job.cost,
+                                "result": job.result,
+                                "scheduled": job.scheduled,
+                            })
+                    if completed_jobs:
+                        return {
+                            "token": response.token,
+                            "jobs": completed_jobs
+                        }
                 await asyncio.sleep(interval)
 
             if last_response:
-                logging.warning(f"Job {token} did not complete within {
-                                timeout} seconds. Returning the last response.")
+                logging.warning(
+                    "Job {token} did not complete within 5 minutes.")
                 return {
                     "token": last_response.token,
                     "jobs": [{
@@ -127,21 +145,45 @@ class Civitai:
 
                 return modified_response
 
-            return asyncio.run(async_get())
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                return asyncio.ensure_future(async_get())
+            else:
+                return asyncio.run(async_get())
 
         def query(self, query, detailed=False):
             async def async_query():
                 response = await post_v1consumerjobsquery(query, detailed=detailed, api_config_override=self.civitai)
                 return response
 
-            return asyncio.run(async_query())
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                return asyncio.ensure_future(async_query())
+            else:
+                return asyncio.run(async_query())
 
         def cancel(self, job_id):
             async def async_cancel():
                 response = await delete_v1consumerjobsjobId(job_id, api_config_override=self.civitai)
                 return response
 
-            return asyncio.run(async_cancel())
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                return asyncio.ensure_future(async_cancel())
+            else:
+                return asyncio.run(async_cancel())
 
 
 # Expose the 'Civitai' class at the module level

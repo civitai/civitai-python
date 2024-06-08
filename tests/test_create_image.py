@@ -8,16 +8,15 @@ class TestCreateImage(unittest.TestCase):
         input_data = {
             "model": "urn:air:sdxl:checkpoint:civitai:101055@128078",
             "params": {
-                "prompt": "A cat",
-                "negativePrompt": "A dog",
+                "prompt": "RAW photo, face portrait photo of 26 y.o woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
+                "negativePrompt": "(deformed, distorted, disfigured:1.3)",
                 "scheduler": "EulerA",
                 "steps": 20,
                 "cfgScale": 7,
-                "width": 768,
+                "width": 512,
                 "height": 512,
-                "seed": -1,
-                "clipSkip": 1
-            },
+                "clipSkip": 2
+            }
         }
 
         output = civitai.image.create(input_data, wait=True)

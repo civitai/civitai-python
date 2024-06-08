@@ -24,7 +24,7 @@ pip install civitai-py
 
 Before running any Python scripts that use the API, you need to set your Civitai API token in your environment.
 
-Grab your token from [civitai.com/user/account](https://civitai.com/user/account) and set it as an environment variable:
+Grab your token from [your Civitai account](https://civitai.com/user/account) and set it as an environment variable:
 
 ```bash
 export CIVITAI_API_TOKEN=<your token>
@@ -46,10 +46,10 @@ import civitai
 
 ```python
 input = {
-    "model": "urn:air:sd1:checkpoint:civitai:4201@130072",
+    "model": "urn:air:sdxl:checkpoint:civitai:101055@128078",
     "params": {
-        "prompt": "RAW photo, face portrait photo of 26 y.o woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
-        "negativePrompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated hands and fingers:1.4), (deformed, distorted, disfigured:1.3)",
+        "prompt": "RAW photo, face portrait photo of woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
+        "negativePrompt": "(deformed, distorted, disfigured:1.3)",
         "scheduler": "EulerA",
         "steps": 20,
         "cfgScale": 7,
@@ -64,6 +64,18 @@ Run a model:
 
 ```python
 response = civitai.image.create(input)
+```
+
+Then, fetch the result later:
+
+```python
+response = civitai.jobs.get(token=response.token)
+```
+
+Or wait for the job to finish by running the generation in the background a.k.a long polling. You can add the `wait=True` flag to the method. It has a default timeout of 5 minutes.
+
+```python
+response = civitai.image.create(input, wait=True)
 ```
 
 ### Using Additional Networks
@@ -107,39 +119,39 @@ Run a model with inputs you provide.
 response = civitai.image.create(options)
 ```
 
-| name                    | type                                                                         | description                                                                                                                                                                                                                                                                                                                               |
-| ----------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model`                 | string \| null                                                               | **Required**. The Civitai model to use for generation.                                                                                                                                                                                                                                                                                    |
-| `params.prompt`         | string \| null                                                               | **Required**. The main prompt for the image generation.                                                                                                                                                                                                                                                                                   |
-| `params.negativePrompt` | string \| null                                                               | Optional. The negative prompt for the image generation.                                                                                                                                                                                                                                                                                   |
-| `params.scheduler`      | [Scheduler](civitai/models/scheduler.py) \| null                             | Optional. The scheduler algorithm to use. <br/> <br/>Possible values are: `EulerA`, `Euler`, `LMS`, `Heun`, `DPM2`, `DPM2A`, `DPM2SA`, `DPM2M`, `DPMSDE`, `DPMFast`, `DPMAdaptive`, `LMSKarras`, `DPM2Karras`, `DPM2AKarras`, `DPM2SAKarras`, `DPM2MKarras`, `DPMSDEKarras`, `DDIM`, `PLMS`, `UniPC`, `Undefined`, `LCM`, `DDPM`, `DEIS`. |
-| `params.steps`          | number \| null                                                               | Optional. The number of steps for the image generation process.                                                                                                                                                                                                                                                                           |
-| `params.cfgScale`       | number \| null                                                               | Optional. The CFG scale for the image generation.                                                                                                                                                                                                                                                                                         |
-| `params.width`          | number                                                                       | **Required**. The width of the generated image.                                                                                                                                                                                                                                                                                           |
-| `params.height`         | number                                                                       | **Required**. The height of the generated image.                                                                                                                                                                                                                                                                                          |
-| `params.seed`           | number \| null                                                               | Optional. The seed for the image generation process.                                                                                                                                                                                                                                                                                      |
-| `params.clipSkip`       | number \| null                                                               | Optional. The number of CLIP skips for the image generation.                                                                                                                                                                                                                                                                              |
-| `callbackUrl`           | string \| null                                                               | Optional. URL that will be invoked upon completion of this job                                                                                                                                                                                                                                                                            |
-| `additionalNetworks`    | [ImageJobNetworkParams](civitai/models/image_job_network_params.py) \| null  | Optional. An associative list of additional networks, keyed by the AIR of the network. Each network is of type [AssetType](civitai/models/asset_type.py).                                                                                                                                                                                 |
-| `controlNets`           | Array<[ImageJobControlNet](civitai/models/image_job_control_net.py)> \| null | Optional. An associative list of additional networks.                                                                                                                                                                                                                                                                                     |
+| name                    | type                                                                      | description                                                                                                                                                                                                                                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`                 | string \| null                                                            | **Required**. The Civitai model to use for generation.                                                                                                                                                                                                                                                                                    |
+| `params.prompt`         | string \| null                                                            | **Required**. The main prompt for the image generation.                                                                                                                                                                                                                                                                                   |
+| `params.negativePrompt` | string \| null                                                            | Optional. The negative prompt for the image generation.                                                                                                                                                                                                                                                                                   |
+| `params.scheduler`      | [Scheduler](civitai/models/Scheduler.py) \| null                          | Optional. The scheduler algorithm to use. <br/> <br/>Possible values are: `EulerA`, `Euler`, `LMS`, `Heun`, `DPM2`, `DPM2A`, `DPM2SA`, `DPM2M`, `DPMSDE`, `DPMFast`, `DPMAdaptive`, `LMSKarras`, `DPM2Karras`, `DPM2AKarras`, `DPM2SAKarras`, `DPM2MKarras`, `DPMSDEKarras`, `DDIM`, `PLMS`, `UniPC`, `Undefined`, `LCM`, `DDPM`, `DEIS`. |
+| `params.steps`          | number \| null                                                            | Optional. The number of steps for the image generation process.                                                                                                                                                                                                                                                                           |
+| `params.cfgScale`       | number \| null                                                            | Optional. The CFG scale for the image generation.                                                                                                                                                                                                                                                                                         |
+| `params.width`          | number                                                                    | **Required**. The width of the generated image.                                                                                                                                                                                                                                                                                           |
+| `params.height`         | number                                                                    | **Required**. The height of the generated image.                                                                                                                                                                                                                                                                                          |
+| `params.seed`           | number \| null                                                            | Optional. The seed for the image generation process.                                                                                                                                                                                                                                                                                      |
+| `params.clipSkip`       | number \| null                                                            | Optional. The number of CLIP skips for the image generation.                                                                                                                                                                                                                                                                              |
+| `callbackUrl`           | string \| null                                                            | Optional. URL that will be invoked upon completion of this job                                                                                                                                                                                                                                                                            |
+| `additionalNetworks`    | [ImageJobNetworkParams](civitai/models/ImageJobNetworkParams.py) \| null  | Optional. An associative list of additional networks, keyed by the AIR of the network. Each network is of type [AssetType](civitai/models/asset_type.py).                                                                                                                                                                                 |
+| `controlNets`           | Array<[ImageJobControlNet](civitai/models/ImageJobControlNet.py)> \| null | Optional. An associative list of additional networks.                                                                                                                                                                                                                                                                                     |
 
 #### Additional Networks
 
-| `additionalNetworks` | Record<string, [ImageJobNetworkParams](civitai/models/image_job_network_params.py)> | Optional. An associative list of additional networks, keyed by the AIR of the network. Each network is described by an `ImageJobNetworkParams` object. |
-| -------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `type`               | [`AssetType`](civitai/models/asset_type.py)                                         | Optional. The type of the asset. <br/><br/>Can be one of `Lora`, `Hypernetwork`, `TextualInversion`, `Lycoris`, `Checkpoint`, `Vae`, `LoCon`.          |
-| `strength`           | number                                                                              | Optional. In case of Lora and LoCon, set the strength of the network.                                                                                  |
-| `triggerWord`        | string                                                                              | Optional. In case of a TextualInversion, set the trigger word of the network.                                                                          |
+| `additionalNetworks` | Record<string, [ImageJobNetworkParams](civitai/models/ImageJobNetworkParams.py)> | Optional. An associative list of additional networks, keyed by the AIR of the network. Each network is described by an `ImageJobNetworkParams` object. |
+| -------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`               | [`AssetType`](civitai/models/AssetType.py)                                       | Optional. The type of the asset. <br/><br/>Can be one of `Lora`, `Hypernetwork`, `TextualInversion`, `Lycoris`, `Checkpoint`, `Vae`, `LoCon`.          |
+| `strength`           | number                                                                           | Optional. In case of Lora and LoCon, set the strength of the network.                                                                                  |
+| `triggerWord`        | string                                                                           | Optional. In case of a TextualInversion, set the trigger word of the network.                                                                          |
 
 #### ControlNets
 
-| `controlNets`  | Array<[ImageJobControlNet](civitai/models/image_job_control_net.py)> | Optional. An array of control networks that can be applied to the image generation process. <br/><br/>Each `ImageJobControlNet` object in the array can have the following properties: |
-| -------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `preprocessor` | [ImageTransformer](civitai/models/image_transformer.py) \| null      | Optional. Specifies the image transformer to be applied as a preprocessor. <br/><br/>Possible values are `Canny`, `DepthZoe`, `SoftedgePidinet`, `Rembg`.                              |
-| `weight`       | number \| null                                                       | Optional. The weight of the control net.                                                                                                                                               |
-| `startStep`    | number \| null                                                       | Optional. The step at which the control net starts to apply.                                                                                                                           |
-| `endStep`      | number \| null                                                       | Optional. The step at which the control net stops applying.                                                                                                                            |
-| `imageUrl`     | string \| null                                                       | Optional. The URL of the image associated with the controlnet.                                                                                                                         |
+| `controlNets`  | Array<[ImageJobControlNet](civitai/models/ImageJobControlNet.py)> | Optional. An array of control networks that can be applied to the image generation process. <br/><br/>Each `ImageJobControlNet` object in the array can have the following properties: |
+| -------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `preprocessor` | [ImageTransformer](civitai/models/ImageTransformer.py) \| null    | Optional. Specifies the image transformer to be applied as a preprocessor. <br/><br/>Possible values are `Canny`, `DepthZoe`, `SoftedgePidinet`, `Rembg`.                              |
+| `weight`       | number \| null                                                    | Optional. The weight of the control net.                                                                                                                                               |
+| `startStep`    | number \| null                                                    | Optional. The step at which the control net starts to apply.                                                                                                                           |
+| `endStep`      | number \| null                                                    | Optional. The step at which the control net stops applying.                                                                                                                            |
+| `imageUrl`     | string \| null                                                    | Optional. The URL of the image associated with the controlnet.                                                                                                                         |
 
 ### `civitai.jobs.get`
 
@@ -147,12 +159,16 @@ Fetches job details based on a provided token or job ID. If both are provided, t
 
 ```python
 job_id = "your_job_id_here"
-response = civitai.jobs.get(id=job_id)
+response = civitai.jobs.get(job_id=job_id)
 
 # OR
 
 token = "your_token_here"
 response = civitai.jobs.get(token=token)
+
+# OR
+
+response = civitai.jobs.get(token=token, job_id=job_id)
 ```
 
 ### `civitai.jobs.query`
