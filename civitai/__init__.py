@@ -72,15 +72,29 @@ class Civitai:
 
         async def _poll_for_job_completion(self, token, interval=1, timeout=300):
             start_time = time.time()
+            last_response = None
             while time.time() - start_time < timeout:
                 response = await get_v1consumerjobs(token, api_config_override=self.civitai)
                 if response and response.jobs:
+                    last_response = response
+                    logging.info(f"Job status: {last_response}")
                     job = response.jobs[0]
                     if job.result and job.result.get("blobUrl"):
                         return job.result
                 await asyncio.sleep(interval)
-            raise TimeoutError(f"Job {token} did not complete within {
-                               timeout} seconds.")
+
+            if last_response:
+                logging.warning(f"Job {token} did not complete within {
+                                timeout} seconds. Returning the last response.")
+                return {
+                    "token": last_response.token,
+                    "jobs": [{
+                        "jobId": job.jobId,
+                        "cost": job.cost,
+                        "result": job.result,
+                        "scheduled": job.scheduled,
+                    } for job in last_response.jobs]
+                }
 
     class Jobs:
         def __init__(self, civitai):
