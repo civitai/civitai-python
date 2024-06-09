@@ -16,10 +16,16 @@ class TestCreateImage(unittest.TestCase):
                 "width": 512,
                 "height": 512,
                 "clipSkip": 2
+            },
+            "additionalNetworks": {
+                # Detail enhancer LoRA: https://civitai.com/models/82098/add-more-details-detail-enhancer-tweaker-lora
+                "urn:air:sd1:lora:civitai:82098@87153": {
+                    "strength": 1.0
+                }
             }
         }
 
-        output = civitai.image.create(input_data, wait=True)
+        output = civitai.image.create(input_data)
         formatted_output = json.dumps(output, indent=4)
         print("Response: ", formatted_output)
 

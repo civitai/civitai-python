@@ -99,8 +99,8 @@ input = {
         "clipSkip": 2
     },
     "additionalNetworks": {
-        "urn:air:sd1:lora:civitai:162141@182559": {
-            "type": "Lora",
+        # Detail enhancer LoRA: https://civitai.com/models/82098/add-more-details-detail-enhancer-tweaker-lora
+        "urn:air:sd1:lora:civitai:82098@87153": {
             "strength": 1.0
         }
     }
@@ -139,7 +139,6 @@ response = civitai.image.create(options)
 
 | `additionalNetworks` | Record<string, [ImageJobNetworkParams](civitai/models/ImageJobNetworkParams.py)> | Optional. An associative list of additional networks, keyed by the AIR of the network. Each network is described by an `ImageJobNetworkParams` object. |
 | -------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `type`               | [`AssetType`](civitai/models/AssetType.py)                                       | Optional. The type of the asset. <br/><br/>Can be one of `Lora`, `Hypernetwork`, `TextualInversion`, `Lycoris`, `Checkpoint`, `Vae`, `LoCon`.          |
 | `strength`           | number                                                                           | Optional. In case of Lora and LoCon, set the strength of the network.                                                                                  |
 | `triggerWord`        | string                                                                           | Optional. In case of a TextualInversion, set the trigger word of the network.                                                                          |
 
