@@ -38,8 +38,7 @@ async def get_v1consumerjobs(
         )
 
     if response.status_code not in [200, 202]:
-        raise HTTPException(response.status_code, f"Request to {
-                            path} failed with status code: {response.status_code}")
+        raise HTTPException(response.status_code, f"Request to {path} failed with status code: {response.status_code}")
 
     return JobStatusCollection(**response.json()) if response.json() is not None else JobStatusCollection()
 
@@ -71,8 +70,7 @@ async def post_v1consumerjobs(
         response = await client.request("post", httpx.URL(path), headers=headers, params=query_params, json=data if isinstance(data, dict) else data.dict())
 
     if response.status_code not in [200, 202]:
-        raise HTTPException(response.status_code, f"Request failed with status code: {
-                            response.status_code}")
+        raise HTTPException(response.status_code, f"Request failed with status code: {response.status_code}")
 
     return JobStatusCollection(**response.json()) if response.json() is not None else JobStatusCollection()
 
@@ -98,8 +96,7 @@ async def put_v1consumerjobs(
         response = await client.request("put", httpx.URL(path), headers=headers, params=query_params, json=data.dict())
 
     if response.status_code != 200:
-        raise HTTPException(response.status_code, f" failed with status code: {
-                            response.status_code}")
+        raise HTTPException(response.status_code, f" failed with status code: {response.status_code}")
 
     return TaintJobsResult(**response.json()) if response.json() is not None else TaintJobsResult()
 
@@ -130,8 +127,7 @@ async def delete_v1consumerjobs(
         )
 
     if response.status_code != 200:
-        raise HTTPException(response.status_code, f" failed with status code: {
-                            response.status_code}")
+        raise HTTPException(response.status_code, f" failed with status code: {response.status_code}")
 
     return None
 
@@ -221,8 +217,7 @@ async def delete_v1consumerjobsjobId(
         )
 
     if response.status_code != 200:
-        raise HTTPException(response.status_code, f" failed with status code: {
-                            response.status_code}")
+        raise HTTPException(response.status_code, f" failed with status code: {response.status_code}")
 
     return None
 
@@ -248,7 +243,6 @@ async def post_v1consumerjobsquery(
         response = await client.request("post", httpx.URL(path), headers=headers, params=query_params, json=data)
 
     if response.status_code != 200:
-        raise HTTPException(response.status_code, f" failed with status code: {
-                            response.status_code}")
+        raise HTTPException(response.status_code, f" failed with status code: {response.status_code}")
 
     return QueryJobsResult(**response.json()) if response.json() is not None else QueryJobsResult()
