@@ -6,7 +6,7 @@ import civitai
 class TestCreateImage(unittest.TestCase):
     def test_create_from_text_job(self):
         input_data = {
-            "model": "urn:air:sdxl:checkpoint:civitai:101055@128078",
+            "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
             "params": {
                 "prompt": "RAW photo, face portrait photo of 26 y.o woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
                 "negativePrompt": "(deformed, distorted, disfigured:1.3)",
@@ -25,7 +25,7 @@ class TestCreateImage(unittest.TestCase):
             }
         }
 
-        output = civitai.image.create(input_data)
+        output = civitai.image.create(input_data, wait=True)
         formatted_output = json.dumps(output, indent=4)
         print("Response: ", formatted_output)
 
