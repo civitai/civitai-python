@@ -46,7 +46,7 @@ import civitai
 
 ```python
 input = {
-    "model": "urn:air:sdxl:checkpoint:civitai:101055@128078",
+    "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
     "params": {
         "prompt": "RAW photo, face portrait photo of woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
         "negativePrompt": "(deformed, distorted, disfigured:1.3)",
