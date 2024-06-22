@@ -80,38 +80,45 @@ class Civitai:
         async def _poll_for_job_completion(self, token, interval=1, timeout=300):
             start_time = time.time()
             last_response = None
+            completed_jobs = {}
             while time.time() - start_time < timeout:
-                response = await get_v1consumerjobs(token, api_config_override=self.civitai)
+                response = await get_v1consumerjobs(
+                    token, api_config_override=self.civitai
+                )
                 if response and response.jobs:
                     last_response = response
                     logging.info(f"Job status: {last_response}")
-                    completed_jobs = []
                     for job in response.jobs:
-                        if job.result and job.result.get("blobUrl"):
-                            completed_jobs.append({
-                                "jobId": job.jobId,
-                                "cost": job.cost,
-                                "result": job.result,
-                                "scheduled": job.scheduled,
-                            })
-                    if completed_jobs:
-                        return {
-                            "token": response.token,
-                            "jobs": completed_jobs
-                        }
+                        if job.jobId not in completed_jobs:
+                            if job.result and job.result.get("blobUrl"):
+                                completed_jobs[job.jobId] = {
+                                    "jobId": job.jobId,
+                                    "cost": job.cost,
+                                    "result": job.result,
+                                    "scheduled": job.scheduled,
+                                }
+                    if len(completed_jobs) >= len(response.jobs):
+                        break
                 await asyncio.sleep(interval)
+
+            if completed_jobs:
+                return {"token": response.token, "jobs": list(completed_jobs.values())}
 
             if last_response:
                 logging.warning(
-                    "Job {token} did not complete within 5 minutes.")
+                    f"Job {token} did not complete within {timeout // 60} minutes."
+                )
                 return {
                     "token": last_response.token,
-                    "jobs": [{
-                        "jobId": job.jobId,
-                        "cost": job.cost,
-                        "result": job.result,
-                        "scheduled": job.scheduled,
-                    } for job in last_response.jobs]
+                    "jobs": [
+                        {
+                            "jobId": job.jobId,
+                            "cost": job.cost,
+                            "result": job.result,
+                            "scheduled": job.scheduled,
+                        }
+                        for job in last_response.jobs
+                    ],
                 }
 
     class Jobs:
