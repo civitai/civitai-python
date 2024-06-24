@@ -6,7 +6,7 @@ import civitai
 class TestCreateImage(unittest.TestCase):
     def test_create_from_text_job(self):
         input_data = {
-            "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+            "model": "urn:air:pony:checkpoint:civitai:372465@534642",
             "params": {
                 "prompt": "RAW photo, face portrait photo of 26 y.o woman, wearing black dress, happy face, hard shadows, cinematic shot, dramatic lighting",
                 "negativePrompt": "(deformed, distorted, disfigured:1.3)",
@@ -17,12 +17,13 @@ class TestCreateImage(unittest.TestCase):
                 "height": 512,
                 "clipSkip": 2
             },
-            "additionalNetworks": {
-                # Detail enhancer LoRA: https://civitai.com/models/82098/add-more-details-detail-enhancer-tweaker-lora
-                "urn:air:sd1:lora:civitai:82098@87153": {
-                    "strength": 1.0
-                }
-            }
+            # "additionalNetworks": {
+            #     # Detail enhancer LoRA: https://civitai.com/models/82098/add-more-details-detail-enhancer-tweaker-lora
+            #     "urn:air:sd1:lora:civitai:82098@87153": {
+            #         "strength": 1.0
+            #     }
+            # },
+            "quantity": 6
         }
 
         output = civitai.image.create(input_data, wait=True)
