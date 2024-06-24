@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "civitai-py"
-version = "0.1.9"
+version = "0.1.10"
 description = "Civitai Python SDK"
 authors = ["Civitai <hello@civitai.com>"]
 license = "MIT"
