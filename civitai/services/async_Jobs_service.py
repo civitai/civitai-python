@@ -134,7 +134,7 @@ async def delete_v1consumerjobs(
 
 async def get_v1consumerjobsjobId(
     jobId: str, detailed: Optional[bool] = None, api_config_override: Optional[APIConfig] = None
-) -> JobStatusCollection:
+) -> JobStatus:
     api_config = api_config_override if api_config_override else APIConfig()
 
     base_path = api_config.base_path
@@ -160,7 +160,7 @@ async def get_v1consumerjobsjobId(
     if response.status_code != 200:
         raise HTTPException(response.status_code, f" failed with status code: {response.status_code}")
 
-    return JobStatusCollection(**response.json()) if response.json() is not None else JobStatusCollection()
+    return JobStatus(**response.json())
 
 
 async def put_v1consumerjobsjobId(
